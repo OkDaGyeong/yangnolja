@@ -22,12 +22,18 @@ public class Connection {
 			System.out.println("연결 성공");
 			
 			//SQL 작성
-			String sql = "select * from users";
+			String sqlUsers = "select * from users";
+			String sqlReser = "select * from reservation";
+			
 			//PreparedStatement 얻기 및 값 지정
-			PreparedStatement pstmt = conn.prepareStatement(sql);
+			PreparedStatement pstmtUser = conn.prepareStatement(sqlUsers);
+			PreparedStatement pstmtReser = conn.prepareStatement(sqlReser);
 			
 			//SQL실행 후 ResultSet을 통해 데이터 읽기
-			ResultSet rs = pstmt.executeQuery();
+			ResultSet rs = pstmtUser.executeQuery();
+			ResultSet rs2 = pstmtReser.executeQuery();
+			
+			System.out.println("[user 테이블 데이터]");
 			while(rs.next()) {
 				Users user = new Users();
 				user.setUserId(rs.getString("user_Id"));
@@ -37,8 +43,26 @@ public class Connection {
 				
 				System.out.println(user);
 			}
+			
+			System.out.println("[reservation 테이블 데이터]");
+			while(rs2.next()) {
+				ReservationTbl reser = new ReservationTbl();
+				reser.setReserNo(rs2.getInt("resev_no"));
+				reser.setRoomNo(rs2.getInt("room_no"));
+				reser.setUserId(rs2.getString("user_id"));
+				reser.setCheckIn(rs2.getDate("check_in"));
+				reser.setCheckOut(rs2.getDate("check_out"));
+				reser.setTeamNum(rs2.getInt("team_num"));
+				
+				System.out.println(reser);
+			}
+			
 			rs.close();
-			pstmt.close();
+			rs2.close();
+			
+			pstmtUser.close();
+			pstmtReser.close();
+			
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
