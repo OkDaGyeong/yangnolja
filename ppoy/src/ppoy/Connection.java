@@ -45,7 +45,7 @@ public class Connection {
 				userTblList.add(user);
 				System.out.println(user);
 			}
-			//System.out.println("88"+userTblList.get(1)); // 인덱스 가져오기
+			
 			
 			String sqlReser = "select * from reservation";			
 			PreparedStatement pstmtReser = conn.prepareStatement(sqlReser);			
@@ -63,7 +63,7 @@ public class Connection {
 				
 				System.out.println(reser);
 			}
-			//System.out.println("88"+rserTblList.get(0)); // 인덱스 가져오기
+		
 			
 			rs.close();
 			rs2.close();
