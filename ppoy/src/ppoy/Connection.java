@@ -1,12 +1,20 @@
 package ppoy;
 
-import java.sql.*;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Connection {
-
-	public static void main(String[] args) {
+	Connection conn = null;
+	Statement stmt = null;
+	ArrayList<Users> userTblList = new ArrayList<>();
+	ArrayList<ReservationTbl> rserTblList = new ArrayList<>();
+	
+	
+	public Connection() {
 		java.sql.Connection conn = null;
 		try {
 			//JDBC Driver 등록
@@ -23,16 +31,10 @@ public class Connection {
 			
 			//SQL 작성
 			String sqlUsers = "select * from users";
-			String sqlReser = "select * from reservation";
-			
 			//PreparedStatement 얻기 및 값 지정
-			PreparedStatement pstmtUser = conn.prepareStatement(sqlUsers);
-			PreparedStatement pstmtReser = conn.prepareStatement(sqlReser);
-			
+			PreparedStatement pstmtUser = conn.prepareStatement(sqlUsers);			
 			//SQL실행 후 ResultSet을 통해 데이터 읽기
 			ResultSet rs = pstmtUser.executeQuery();
-			ResultSet rs2 = pstmtReser.executeQuery();
-			
 			System.out.println("[user 테이블 데이터]");
 			while(rs.next()) {
 				Users user = new Users();
@@ -40,22 +42,28 @@ public class Connection {
 				user.setUserName(rs.getString("user_name"));
 				user.setUserPw(rs.getString("user_pw"));
 				user.setUserTel(rs.getString("user_tel"));
-				
+				userTblList.add(user);
 				System.out.println(user);
 			}
+			//System.out.println("88"+userTblList.get(1)); // 인덱스 가져오기
 			
+			String sqlReser = "select * from reservation";			
+			PreparedStatement pstmtReser = conn.prepareStatement(sqlReser);			
+			ResultSet rs2 = pstmtReser.executeQuery();
 			System.out.println("[reservation 테이블 데이터]");
 			while(rs2.next()) {
 				ReservationTbl reser = new ReservationTbl();
-				reser.setReserNo(rs2.getInt("resev_no"));
+				reser.setReserNo(rs2.getInt("reser_no"));
 				reser.setRoomNo(rs2.getInt("room_no"));
 				reser.setUserId(rs2.getString("user_id"));
 				reser.setCheckIn(rs2.getDate("check_in"));
 				reser.setCheckOut(rs2.getDate("check_out"));
 				reser.setTeamNum(rs2.getInt("team_num"));
+				rserTblList.add(reser);
 				
 				System.out.println(reser);
 			}
+			//System.out.println("88"+rserTblList.get(0)); // 인덱스 가져오기
 			
 			rs.close();
 			rs2.close();
@@ -77,6 +85,10 @@ public class Connection {
 				} catch (SQLException e) {}
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		Connection cn = new Connection();
 	}
 
 }
