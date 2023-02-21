@@ -20,6 +20,26 @@ public class Connection {
 			);	
 			
 			System.out.println("연결 성공");
+			
+			//SQL 작성
+			String sql = "select * from users";
+			//PreparedStatement 얻기 및 값 지정
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			
+			//SQL실행 후 ResultSet을 통해 데이터 읽기
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Users user = new Users();
+				user.setUserId(rs.getString("user_Id"));
+				user.setUserName(rs.getString("user_name"));
+				user.setUserPw(rs.getString("user_pw"));
+				user.setUserTel(rs.getString("user_tel"));
+				
+				System.out.println(user);
+			}
+			rs.close();
+			pstmt.close();
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
