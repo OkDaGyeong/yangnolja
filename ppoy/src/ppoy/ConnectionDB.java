@@ -1,5 +1,6 @@
 package ppoy;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,15 +8,31 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class Connection {
+public class ConnectionDB {
+	
 	Connection conn = null;
 	Statement stmt = null;
+	String driver = "com.mysql.cj.jdbc.Driver";
+	
+	String url = "jdbc:mysql://222.119.100.81:3382/ppoy";
+	String user = "ppoy";
+	String pwd = "ppoy";
+	
 	ArrayList<Users> userTblList = new ArrayList<>();
-	ArrayList<ReservationTbl> rserTblList = new ArrayList<>();
+	ArrayList<ReservationTbl> reserTblList = new ArrayList<>();
 	
+	public void dbconnect() {
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, user, pwd);
+			stmt = conn.createStatement();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
-	public Connection() {
-		java.sql.Connection conn = null;
+	public ConnectionDB(String loginId) {
 		try {
 			//JDBC Driver 등록
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -35,7 +52,7 @@ public class Connection {
 			PreparedStatement pstmtUser = conn.prepareStatement(sqlUsers);			
 			//SQL실행 후 ResultSet을 통해 데이터 읽기
 			ResultSet rs = pstmtUser.executeQuery();
-			System.out.println("[user 테이블 데이터]");
+			//System.out.println("[user 테이블 데이터]");
 			while(rs.next()) {
 				Users user = new Users();
 				user.setUserId(rs.getString("user_Id"));
@@ -43,14 +60,15 @@ public class Connection {
 				user.setUserPw(rs.getString("user_pw"));
 				user.setUserTel(rs.getString("user_tel"));
 				userTblList.add(user);
-				System.out.println(user);
+				//System.out.println(user);
 			}
 			
 			
-			String sqlReser = "select * from reservation";			
+			String sqlReser = "select * from reservation where user_id = '"+loginId+"';";	
+			System.out.println("login : " +loginId);
 			PreparedStatement pstmtReser = conn.prepareStatement(sqlReser);			
 			ResultSet rs2 = pstmtReser.executeQuery();
-			System.out.println("[reservation 테이블 데이터]");
+			//System.out.println("[reservation 테이블 데이터]");
 			while(rs2.next()) {
 				ReservationTbl reser = new ReservationTbl();
 				reser.setReserNo(rs2.getInt("reser_no"));
@@ -59,9 +77,9 @@ public class Connection {
 				reser.setCheckIn(rs2.getDate("check_in"));
 				reser.setCheckOut(rs2.getDate("check_out"));
 				reser.setTeamNum(rs2.getInt("team_num"));
-				rserTblList.add(reser);
+				reserTblList.add(reser);
 				
-				System.out.println(reser);
+				//System.out.println(reser);
 			}
 		
 			
@@ -71,6 +89,10 @@ public class Connection {
 			pstmtUser.close();
 			pstmtReser.close();
 			
+			//예약 삭제
+			/*String sqlDelReser = "delete from reservation where reser_no =?";
+			PreparedStatement pstmtDR = conn.prepareStatement(sqlDelReser);
+			pstmtDR.setString(1, reserNo);*/
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -87,8 +109,5 @@ public class Connection {
 		}
 	}
 
-	public static void main(String[] args) {
-		Connection cn = new Connection();
-	}
 
 }
