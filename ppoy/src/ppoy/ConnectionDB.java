@@ -12,9 +12,25 @@ public class ConnectionDB {
 	
 	Connection conn = null;
 	Statement stmt = null;
-	ArrayList<Users> userTblList = new ArrayList<>();
-	ArrayList<ReservationTbl> rserTblList = new ArrayList<>();
+	String driver = "com.mysql.cj.jdbc.Driver";
 	
+	String url = "jdbc:mysql://222.119.100.81:3382/ppoy";
+	String user = "ppoy";
+	String pwd = "ppoy";
+	
+	ArrayList<Users> userTblList = new ArrayList<>();
+	ArrayList<ReservationTbl> reserTblList = new ArrayList<>();
+	
+	public void dbconnect() {
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, user, pwd);
+			stmt = conn.createStatement();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public ConnectionDB() {
 		try {
@@ -60,7 +76,7 @@ public class ConnectionDB {
 				reser.setCheckIn(rs2.getDate("check_in"));
 				reser.setCheckOut(rs2.getDate("check_out"));
 				reser.setTeamNum(rs2.getInt("team_num"));
-				rserTblList.add(reser);
+				reserTblList.add(reser);
 				
 				System.out.println(reser);
 			}
@@ -72,6 +88,10 @@ public class ConnectionDB {
 			pstmtUser.close();
 			pstmtReser.close();
 			
+			//예약 삭제
+			/*String sqlDelReser = "delete from reservation where reser_no =?";
+			PreparedStatement pstmtDR = conn.prepareStatement(sqlDelReser);
+			pstmtDR.setString(1, reserNo);*/
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
