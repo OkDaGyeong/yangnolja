@@ -13,16 +13,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 
 public class MyPage extends JFrame {
-	ConnectionDB cn = new ConnectionDB();
+	String loginId;
+	ConnectionDB cn;
 	private JTable reserTbl;
 	
 	JButton btnDelete = new RoundButton("예약 취소");
@@ -54,7 +54,11 @@ public class MyPage extends JFrame {
 	};
 	
 	
-	public MyPage() {
+	
+	public MyPage(String id) {
+		loginId=id;
+		cn = new ConnectionDB(loginId);
+		
 		getContentPane().setBackground(new Color(173, 216, 230));
 		this.setTitle("MyPage");
 		this.setSize(1000,600);
@@ -62,9 +66,10 @@ public class MyPage extends JFrame {
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
-		JLabel PageName = new JLabel("My Page");
+		//JLabel PageName = new JLabel("My Page["+id+"]");
+		JLabel PageName = new JLabel("★ "+id+"님의 예약"); //이모티콘 추가
 		PageName.setFont(new Font("맑은 고딕", Font.BOLD, 25));
-		PageName.setBounds(37, 25, 154, 56);
+		PageName.setBounds(37, 25, 776, 56);
 		getContentPane().add(PageName);
 
 		btnDelete.setForeground(new Color(224, 255, 255));
@@ -103,9 +108,19 @@ public class MyPage extends JFrame {
 		btnHome.setIcon(changeIcon);	    
 		btnHome.setBackground(new Color(240, 240, 240));
 	    btnHome.setOpaque(false); //버튼 배경색 없애기
-	    btnHome.setBorderPainted(false); // 버튼 테두리 없애기
+	    btnHome.setBorder(null); // 버튼 테두리 없애기
 		btnHome.setBounds(885, 38, 52, 30);
 		getContentPane().add(btnHome);
+		btnHome.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				HomePage h = new HomePage(id);
+				h.setVisible(true);
+				dispose();
+				
+			}
+		});
 		
 		
 		//--- 테이블
@@ -198,7 +213,7 @@ public class MyPage extends JFrame {
 		
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -208,5 +223,5 @@ public class MyPage extends JFrame {
 	        }
 	    });
 
-	}
+	}*/
 }

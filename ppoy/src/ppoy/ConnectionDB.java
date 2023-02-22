@@ -32,7 +32,7 @@ public class ConnectionDB {
 		
 	}
 	
-	public ConnectionDB() {
+	public ConnectionDB(String loginId) {
 		try {
 			//JDBC Driver 등록
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -52,7 +52,7 @@ public class ConnectionDB {
 			PreparedStatement pstmtUser = conn.prepareStatement(sqlUsers);			
 			//SQL실행 후 ResultSet을 통해 데이터 읽기
 			ResultSet rs = pstmtUser.executeQuery();
-			System.out.println("[user 테이블 데이터]");
+			//System.out.println("[user 테이블 데이터]");
 			while(rs.next()) {
 				Users user = new Users();
 				user.setUserId(rs.getString("user_Id"));
@@ -60,14 +60,15 @@ public class ConnectionDB {
 				user.setUserPw(rs.getString("user_pw"));
 				user.setUserTel(rs.getString("user_tel"));
 				userTblList.add(user);
-				System.out.println(user);
+				//System.out.println(user);
 			}
 			
 			
-			String sqlReser = "select * from reservation";			
+			String sqlReser = "select * from reservation where user_id = '"+loginId+"';";	
+			System.out.println("login : " +loginId);
 			PreparedStatement pstmtReser = conn.prepareStatement(sqlReser);			
 			ResultSet rs2 = pstmtReser.executeQuery();
-			System.out.println("[reservation 테이블 데이터]");
+			//System.out.println("[reservation 테이블 데이터]");
 			while(rs2.next()) {
 				ReservationTbl reser = new ReservationTbl();
 				reser.setReserNo(rs2.getInt("reser_no"));
@@ -78,7 +79,7 @@ public class ConnectionDB {
 				reser.setTeamNum(rs2.getInt("team_num"));
 				reserTblList.add(reser);
 				
-				System.out.println(reser);
+				//System.out.println(reser);
 			}
 		
 			
@@ -108,8 +109,5 @@ public class ConnectionDB {
 		}
 	}
 
-	public static void main(String[] args) {
-		ConnectionDB cn = new ConnectionDB();
-	}
 
 }
