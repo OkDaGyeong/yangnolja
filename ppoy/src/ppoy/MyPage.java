@@ -13,9 +13,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,7 +28,6 @@ public class MyPage extends JFrame {
 	private JTable reserTbl;
 	
 	JButton btnDelete = new RoundButton("예약 취소");
-	//JButton btnUpdate = new RoundButton("예약 변경");
 	JButton btnHome = new JButton("");
 	
 	
@@ -59,15 +60,18 @@ public class MyPage extends JFrame {
 		loginId=id;
 		cn = new ConnectionDB(loginId);
 		
-		getContentPane().setBackground(new Color(173, 216, 230));
+		//getContentPane().setBackground(new Color(173, 216, 230));
+		getContentPane().setBackground(new Color(230, 230, 245));
 		this.setTitle("MyPage");
 		this.setSize(1000,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+		this.setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
 		getContentPane().setLayout(null);
 
 		//JLabel PageName = new JLabel("My Page["+id+"]");
-		JLabel PageName = new JLabel("★ "+id+"님의 예약"); //이모티콘 추가
+		JLabel PageName = new JLabel(" "+id+"님의 예약"); //이모티콘 추가
+		PageName.setIcon(new ImageIcon(MyPage.class.getResource("/img/user.png")));
 		PageName.setFont(new Font("맑은 고딕", Font.BOLD, 25));
 		PageName.setBounds(37, 25, 776, 56);
 		getContentPane().add(PageName);
@@ -80,17 +84,23 @@ public class MyPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(reserTbl.getSelectedRow() == -1) //선택안했을 때
 				{
-					return;
+					JOptionPane.showMessageDialog(null, "취소할 예약을 선택하십시오", "경고", JOptionPane.WARNING_MESSAGE);
+					//return;
 				}
 				else
 				{
-					//JOptionPane.showConfirmDialog("선택한 예약을 삭제하시겠습니까?", e);
-					delNum = (int) reserTbl.getValueAt(reserTbl.getSelectedRow(),0);
-					delReser(delNum);
-					reserTM.removeRow(reserTbl.getSelectedRow());
+					int result = JOptionPane.showConfirmDialog(null, "선택한 예약을 삭제하시겠습니까?","삭제",JOptionPane.YES_NO_OPTION);
+					if(result == JOptionPane.YES_OPTION) {
+						delNum = (int) reserTbl.getValueAt(reserTbl.getSelectedRow(),0);
+						delReser(delNum);
+						reserTM.removeRow(reserTbl.getSelectedRow());
+					}else {
+						//예약취소 안함
+					}
+					
+					
 					
 				}
-				//delNum = Integer.parseInt(JOptionPane.showInputDialog("삭제할 예약번호를 입력하시오")); // 다이얼로그 띄우기
 
 			}
 		});
@@ -101,10 +111,12 @@ public class MyPage extends JFrame {
 	
 		
 		//이미지 크기 조절
-	    ImageIcon icon = new ImageIcon(getClass().getResource("/img/home.png"));			
-	    Image img = icon.getImage();
-	    Image changeImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-	    ImageIcon changeIcon = new ImageIcon(changeImg);
+//	    ImageIcon icon = new ImageIcon(getClass().getResource("/img/home.png"));			
+//	    Image img = icon.getImage();
+//	    Image changeImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+//	    ImageIcon changeIcon = new ImageIcon(changeImg);
+		ImageIcon changeIcon = new ImageIcon(getClass().getResource("/img/home.png"));
+	    
 		btnHome.setIcon(changeIcon);	    
 		btnHome.setBackground(new Color(240, 240, 240));
 	    btnHome.setOpaque(false); //버튼 배경색 없애기
@@ -127,7 +139,9 @@ public class MyPage extends JFrame {
 		JScrollPane scrollPane = new JScrollPane(getReserTbl());
 		scrollPane.getViewport().setBackground(Color.white);
 		scrollPane.setBounds(37, 103, 900, 350);
+		scrollPane.setBorder(new LineBorder(new Color(100, 149, 237), 3, true));
 		getContentPane().add(scrollPane);
+
 
 	}
 	
@@ -142,15 +156,21 @@ public class MyPage extends JFrame {
 			celAlignRight.setHorizontalAlignment(JLabel.RIGHT);
 			
 			
+			
 			//표 생성
 			reserTbl = new JTable(reserTM);
 			reserTbl.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
 			reserTbl.getTableHeader().setBackground(new Color(180,201,239)); // th 색상
-			reserTbl.setBackground(Color.white);
+			
+			reserTbl.setBackground(new Color(255, 255, 255));
 			reserTbl.getTableHeader().setFont(tHead);
 			reserTbl.getTableHeader().setReorderingAllowed(false); 
 			reserTbl.getTableHeader().setResizingAllowed(false);
+			reserTbl.getTableHeader().setBorder(null);
 			reserTbl.setRowHeight(30);
+			
+			EmptyBorder b1 = new EmptyBorder(5,3,5,3);
+			reserTbl.getTableHeader().setBorder(b1);
 			
 			
 			//컬럼 너비
@@ -161,8 +181,10 @@ public class MyPage extends JFrame {
 			reserTbl.getColumn("예약번호").setCellRenderer(celAlignCenter);
 			reserTbl.getColumn("방번호").setCellRenderer(celAlignCenter);				
 			reserTbl.getColumn("인원 수").setCellRenderer(celAlignCenter);
-			reserTbl.getColumn("체크인 날짜").setCellRenderer(celAlignRight);	
-			reserTbl.getColumn("체크아웃 날짜").setCellRenderer(celAlignRight);
+//			reserTbl.getColumn("체크인 날짜").setCellRenderer(celAlignRight);	
+//			reserTbl.getColumn("체크아웃 날짜").setCellRenderer(celAlignRight);
+			reserTbl.getColumn("체크인 날짜").setCellRenderer(celAlignCenter);	
+			reserTbl.getColumn("체크아웃 날짜").setCellRenderer(celAlignCenter);
 			
 			//테이블 데이터 추가
 			readReserTbl();
@@ -177,10 +199,10 @@ public class MyPage extends JFrame {
 		for(int i=0; i<cn.reserTblList.size(); i++) {
 			reserTM.addRow(new Object[] {
 					cn.reserTblList.get(i).getReserNo(),
-					cn.reserTblList.get(i).getRoomNo(),
+					"Room "+cn.reserTblList.get(i).getRoomNo(),
 					cn.reserTblList.get(i).getCheckIn(),
 					cn.reserTblList.get(i).getCheckOut(),
-					cn.reserTblList.get(i).getTeamNum()
+					cn.reserTblList.get(i).getTeamNum()+" 명"
 							});
 		}
 	}

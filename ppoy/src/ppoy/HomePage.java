@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -22,6 +23,29 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+class ImageWindow extends JFrame {
+	public ImageWindow(ImageIcon imageIcon) {
+		// 새창 생성
+		JFrame frame = new JFrame("상세 화면");
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
+		// 이미지 표시
+		JLabel label = new JLabel(imageIcon);
+		frame.add(label);
+
+		// 창크기 조절 및 가운데 정렬
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+
+		// 창 표시
+		frame.setVisible(true);
+	}
+}
 
 class HomePage extends JFrame implements ActionListener
 
@@ -46,11 +70,12 @@ class HomePage extends JFrame implements ActionListener
 	Color bc, fc;
 	Calendar today;
 	Calendar cal;
+	// Date date;
 
 	JButton btnBefore, btnAfter;
 	JButton btnAdd, btnDel;
 	JButton btnRoom1, btnRoom2, btnRoom3;
-	JButton myPage;
+	JButton myPage, btnLogout;
 	JButton[] calBtn = new JButton[49];
 
 	JLabel thing;
@@ -64,6 +89,9 @@ class HomePage extends JFrame implements ActionListener
 	JTextField txtMonth, txtYear;
 	JTextArea txtWrite;
 	JTextField txtTime;
+
+	String checkIn = "";
+	String checkOut = "";
 
 	public HomePage(String id) {
 
@@ -89,25 +117,35 @@ class HomePage extends JFrame implements ActionListener
 		txtYear.setBorder(null);
 		txtMonth.setEnabled(false); // 이벤트 막음
 		txtMonth.setBorder(null);
-		panNorth.add(btnAdd = new JButton("예약 추가"));
-		panNorth.add(btnDel = new JButton("예약 삭제"));
-		panNorth.add(myPage = new JButton(id + "님 PAGE"));
 
-		btnAdd.setForeground(new Color(224, 255, 255));
-		btnAdd.setBackground(new Color(100, 149, 237));
+		panNorth.add(myPage = new JButton(id + " 님의 PAGE "));
+		//이미지 크기 조절
+	    ImageIcon icon = new ImageIcon(getClass().getResource("/img/user.png"));			
+	    Image img = icon.getImage();
+	    Image changeImg = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+	    ImageIcon changeIcon = new ImageIcon(changeImg);
 		
-		btnDel.setForeground(new Color(224, 255, 255));
-		btnDel.setBackground(new Color(100, 149, 237));
+		myPage.setIcon(changeIcon);
+		myPage.setHorizontalTextPosition(JLabel.LEFT);
+		panNorth.add(btnLogout = new JButton("LOGOUT "));
 		
-		
+		//이미지 크기 조절
+	    ImageIcon icon2 = new ImageIcon(getClass().getResource("/img/logout.png"));			
+	    Image img2 = icon2.getImage();
+	    Image changeImg2 = img2.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+	    ImageIcon changeIcon2 = new ImageIcon(changeImg2);
+	    
+		btnLogout.setIcon(changeIcon2);
+		btnLogout.setHorizontalTextPosition(JLabel.LEFT);
+
 		btnAfter.setForeground(new Color(67, 116, 217));
 		btnAfter.setBackground(new Color(255, 255, 255));
 		btnAfter.setBorder(null);
-		
+
 		btnBefore.setForeground(new Color(67, 116, 217));
 		btnBefore.setBackground(new Color(255, 255, 255));
 		btnBefore.setBorder(null);
-		
+
 		myPage.setForeground(new Color(67, 117, 218));
 		myPage.setBackground(new Color(255, 255, 255));
 		myPage.addActionListener(new ActionListener() {
@@ -120,6 +158,19 @@ class HomePage extends JFrame implements ActionListener
 			}
 		});
 
+		btnLogout.setForeground(new Color(67, 117, 218));
+		btnLogout.setBackground(new Color(255, 255, 255));
+		btnLogout.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LoginProject loginPage = new LoginProject();
+
+				loginPage.setFrame(loginPage);
+				dispose();
+			}
+		});
+
 		// Font 설정하기
 		f = new Font("맑은 고딕", Font.BOLD, 40);
 		f2 = new Font("맑은 고딕", Font.BOLD, 15);
@@ -128,11 +179,12 @@ class HomePage extends JFrame implements ActionListener
 		txtMonth.setFont(f);
 		btnAfter.setFont(f3);
 		btnBefore.setFont(f3);
-		btnAdd.setFont(f2);
-		btnDel.setFont(f2);
+
 		myPage.setFont(f2);
+		btnLogout.setFont(f2);
 
 		getContentPane().add(panNorth, "North");
+		setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
 
 		/*
 		 * HomePage라는 큰놈 위에 레이아웃을 동,서,남,북으로 나눠서 패널을 하나 하나 올려 놓는 형식이다. 메인보드 위에 부품이 하나 하나
@@ -147,18 +199,18 @@ class HomePage extends JFrame implements ActionListener
 		hideInit(); // 버튼이 없는 곳은 비활성화
 		getContentPane().add(panCenter, "Center");
 		panCenter.setBackground(Color.WHITE);
+		panCenter.setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		// panSouth : 메모 만들기
 		panSouth = new JPanel();
-
 		panSouth.add(time = new JLabel("CHECK▶"));
 		time.setBounds(100, 50, 70, 60);
 		panSouth.add(txtWrite = new JTextArea());
 		txtWrite.setPreferredSize(new Dimension(900, 100));
 		// 메모를 입력받을 텍스트 박스를 가로 200 세로 50에 생성
+		txtWrite.setFont(f2);
 		getContentPane().add(panSouth, BorderLayout.SOUTH);
-
-		txtWrite.setBackground(new Color(100, 149, 237));
+		txtWrite.setBackground(new Color(180, 201, 239));
 		panSouth.setBackground(Color.WHITE);
 
 		// panEast : 방 만들기
@@ -169,45 +221,75 @@ class HomePage extends JFrame implements ActionListener
 
 		jLabel1.setIcon(new ImageIcon(getClass().getResource("/img/room1.jpg")));
 		jLabel2.setIcon(new ImageIcon(getClass().getResource("/img/room2.jpg")));
-		
+
+		// 이미지 새창띄우기
+		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/img/room1_big.jpg"));
+
+		// 라벨 생성
+		JLabel label = jLabel1;
+
+		// 라벨에 리스너 등록
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 이미지 클릭 시 새창 띄우기
+				ImageWindow imageWindow = new ImageWindow(imageIcon);
+			}
+		});
+
+		ImageIcon imageIcon2 = new ImageIcon(getClass().getResource("/img/room2_big.jpg"));
+
+		// 라벨 생성
+		JLabel label2 = jLabel2;
+
+		// 라벨에 리스너 등록
+		label2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 이미지 클릭 시 새창 띄우기
+				ImageWindow imageWindow = new ImageWindow(imageIcon2);
+			}
+		});
+
 		panEast.add(jLabel1);
-		panEast.add(new JLabel("economy"));
+		panEast.add(new JLabel(
+				"<html><p style = 'font-family:맑은 고딕', 'font-size:10px'><span style = 'color:red;'>[★연박불가★]</span> economy(Room 1) : <br> 누우면 잠이 솔솔 오는 아늑한 방.</p> </html>"));
 		panEast.add(jLabel2);
-		panEast.add(new JLabel("VVIP"));
-		
-		panEast.add(btnRoom1 = new RoundButton("예약 하기"));		
+		panEast.add(new JLabel(
+				"<html><p style = 'font-family:맑은 고딕', 'font-size:10px'><span style = 'color:red;'>[★연박불가★]</span> VVIP(Room 2) : <br> 럭셔리하고 세련된 풀옵션 오션 뷰 룸.</p></html>"));
+		panEast.add(btnRoom1 = new RoundButton("예약 하기"));
+
 		btnRoom1.setForeground(Color.white);
 		btnRoom1.setBackground(new Color(100, 149, 237));
-		btnRoom1.setFont(f2);
+		btnRoom1.setFont(f3);
+		panEast.setBorder(new EmptyBorder(0, 0, 0, 15));
+
 		btnRoom1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Reservation reserPage = new Reservation(id);
 				reserPage.setVisible(true);
-				
-				
+
 			}
 		});
-		
-		/*
-		panEast.add(btnRoom1 = new RoundButton("economy 예약"));
-		btnRoom1.setForeground(new Color(224, 255, 255));
-		btnRoom1.setBackground(new Color(100, 149, 237));
-		
-		panEast.add(btnRoom2 = new RoundButton("VVIP 예약"));
-		btnRoom2.setForeground(new Color(224, 255, 255));
-		btnRoom2.setBackground(new Color(100, 149, 237));
 
-		btnRoom1.setFont(f2);
-		btnRoom2.setFont(f2);*/
+		/*
+		 * panEast.add(btnRoom1 = new RoundButton("economy 예약"));
+		 * btnRoom1.setForeground(new Color(224, 255, 255)); btnRoom1.setBackground(new
+		 * Color(100, 149, 237));
+		 * 
+		 * panEast.add(btnRoom2 = new RoundButton("VVIP 예약"));
+		 * btnRoom2.setForeground(new Color(224, 255, 255)); btnRoom2.setBackground(new
+		 * Color(100, 149, 237));
+		 * 
+		 * btnRoom1.setFont(f2); btnRoom2.setFont(f2);
+		 */
 
 		getContentPane().add(panEast, BorderLayout.EAST);
 		panEast.setBackground(Color.WHITE);
 
 		btnBefore.addActionListener(this);
 		btnAfter.addActionListener(this);
-		btnAdd.addActionListener(this);
-		btnDel.addActionListener(this);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// *************
 		setTitle("예약 현황");// *********************
@@ -311,18 +393,18 @@ class HomePage extends JFrame implements ActionListener
 			this.txtMonth.setText(month + "월");
 		}
 
-		else if (ae.getSource() == btnAdd) {
-			add();
-			calSet();
-			txtWrite.setText("");
+//      else if (ae.getSource() == btnAdd) {
+//         add();
+//         calSet();
+//         txtWrite.setText("");
+//
+//      }
 
-		}
-
-		else if (ae.getSource() == btnDel) {
-			del();
-			calSet();
-			txtWrite.setText("");
-		}
+//      else if (ae.getSource() == btnDel) {
+//         del();
+//         calSet();
+//         txtWrite.setText("");
+//      }
 
 		else if (Integer.parseInt(ae.getActionCommand()) >= 1 && Integer.parseInt(ae.getActionCommand()) <= 31) {
 			day = Integer.parseInt(ae.getActionCommand());
@@ -353,11 +435,10 @@ class HomePage extends JFrame implements ActionListener
 		// 표 요일 출력 (버튼으로 출력됨)
 		for (int i = 0; i < days.length; i++) {
 			JButton th = new JButton(days[i]);
-			th.setBackground(new Color(180,201,239)); //버튼 배경색
-			//th.setEnabled(false);
-			panCenter.add(calBtn[i] = th );
+			th.setBackground(new Color(180, 201, 239)); // 버튼 배경색
+			// th.setEnabled(false);
+			panCenter.add(calBtn[i] = th);
 		}
-			
 
 		for (int i = days.length; i < 49; i++) {
 			panCenter.add(calBtn[i] = new JButton(""));
@@ -396,11 +477,7 @@ class HomePage extends JFrame implements ActionListener
 				JOptionPane.showMessageDialog(null, "입력되었습니다.");
 			}
 
-			sql = "insert into memo (memo, year, month, day) values (";
-			sql += "'" + temp + "',";
-			sql += "" + year + ",";
-			sql += "" + month + ",";
-			sql += "" + day + ");";
+			sql = "update reservation " + "set check_in =?, " + "check_out = ?," + "where id = reser_no";
 			stmt.executeUpdate(sql);
 
 			stmt.close();
@@ -415,11 +492,9 @@ class HomePage extends JFrame implements ActionListener
 	public void del() {
 		try {
 			dbConnect();
-
-			sql = "delete from memo where year=";
-			sql += year + " and month=";
-			sql += month + " and day=";
-			sql += +day + ";";
+			String clickDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
+			sql = "delete from reservation where check_in='";
+			sql += clickDate + "'";
 
 			stmt.executeUpdate(sql);
 			stmt.close();
@@ -432,14 +507,18 @@ class HomePage extends JFrame implements ActionListener
 
 	}// end del();
 
-	public void searchmemo() {
+	public void searchmemo() { // 사용자가 선택한 날짜 정보
 		try {
 			dbConnect();
 
-			sql = "select memo from memo where year=";
-			sql += year + " and month=";
-			sql += month + " and day=";
-			sql += "" + day + ";";
+			/*
+			 * sql = "select memo from reservation where check_in="; sql += checkIn +
+			 * " and checkOut="; sql += checkOut + " and days_between="; sql += "" + day +
+			 * ";";
+			 */
+			String clickDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
+			sql = "select * from reservation where check_in='";
+			sql += clickDate + "'";
 
 			rs = stmt.executeQuery(sql);
 			String gettemp = "";
@@ -457,18 +536,42 @@ class HomePage extends JFrame implements ActionListener
 		}
 	}// end searchmemo()
 
-	public void checkday() {
+	public void checkday() { // 이번달 전체 정보
 		dbConnect();
 
-		sql = "select * from memo where year=";
-		sql += year + " and month=";
-		sql += month + " and day=";
-		sql += "" + todays + ";";
+		String clickDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(todays);
+		sql = "select * from reservation where check_in='";
+		sql += clickDate + "'";
+		// sql = "select * from reservation";
 
 		try {
 			rs = stmt.executeQuery(sql);
 			if (rs.next()) {
+
+				// System.out.println(rs.getDate("check_out")); //해당날짜의 체크아웃 날짜 가져오기
+
+				/*
+				 * Date date = new Date(); Calendar cal_out = Calendar.getInstance();
+				 * cal_out.setTime(rs.getDate("check_out"));
+				 * 
+				 * int out_year = cal_out.get(Calendar.YEAR); int out_month
+				 * =cal_out.get(Calendar.MONTH) + 1; int out_day
+				 * =cal_out.get(Calendar.DAY_OF_MONTH);
+				 * 
+				 * Calendar cal_in = Calendar.getInstance();
+				 * cal_in.setTime(rs.getDate("check_in"));
+				 * 
+				 * int in_year = cal_in.get(Calendar.YEAR); int in_month
+				 * =cal_in.get(Calendar.MONTH) + 1; int in_day
+				 * =cal_in.get(Calendar.DAY_OF_MONTH);
+				 * 
+				 * for(int i=in_year; i<=out_year;i++) { for(int j=in_month; j<=out_month;j++) {
+				 * for(int k=in_day; k<=out_day;k++) { memoday = 1; System.out.println(k);
+				 * 
+				 * } } }
+				 */
 				memoday = 1;
+
 			} else
 				memoday = 0;
 
