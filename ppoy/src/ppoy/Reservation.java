@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,435 +33,527 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class Reservation extends JFrame implements ActionListener {
-	String loginUser;
+   String loginUser;//로그인 정보
 //DB연결//////////////////////////////////////////////////////
 
-	Connection cn = null;
+   Connection cn = null;
 
-	String driver = "com.mysql.cj.jdbc.Driver";
-	String url = "jdbc:mysql://222.119.100.81:3382/ppoy";
-	String user = "ppoy";
-	String pwd = "ppoy";
+   String driver = "com.mysql.cj.jdbc.Driver";
+   String url = "jdbc:mysql://222.119.100.81:3382/ppoy";
+   String user = "ppoy";
+   String pwd = "ppoy";
 
-	Statement stmt = null;
-	ResultSet rs = null;
-	String sql, tempmemo;
+   Statement stmt = null;
+   ResultSet rs = null;
+   String sql, tempmemo;
 
-	public void dbConnect() {
-		try {
+//////////////////////////////////////////////////////
+   public void dbConnect() {
+      try {
 
-			Class.forName(driver);
+         Class.forName(driver);
 
-			cn = DriverManager.getConnection(url, user, pwd);
+         cn = DriverManager.getConnection(url, user, pwd);
 
-			stmt = cn.createStatement();
+         stmt = cn.createStatement();
 
-		} catch (Exception ex) {
+      } catch (Exception ex) {
 
-			ex.printStackTrace();
+         ex.printStackTrace();
 
-		}
-	}
+      }
+   }
 
-	public void saveInfo() {
-		try {
-			dbConnect();
+   public void saveInfo() {
+      try {
+         dbConnect();
 
-			String checkIn = checkInField.getText();
-			String checkOut = checkOutField.getText();
-			String strRoomNo = roomNum.getSelectedItem().toString();
-			String roomNo = strRoomNo.equals("economy")?"1":"2";
-			String teamNo = num2.getSelectedItem().toString();
+         String checkIn = checkInField.getText();
+         String checkOut = checkOutField.getText();
+         String strRoomNo = roomNum.getSelectedItem().toString();
+         String roomNo = strRoomNo.equals("economy") ? "1" : "2";
+         String teamNo = num2.getSelectedItem().toString();
 
-			if (strRoomNo.equals("")) {
-				JOptionPane.showMessageDialog(null, "내용이 없습니다.");
-				return;
-			} else {
-				sql = "insert into reservation(reser_no,room_no, user_id, check_in, check_out, team_num) values (null,";
-				sql += "" + roomNo + ",";
-				sql += "'"+loginUser+"', ";
-				sql += "'" + checkIn + "',";
-				sql += "'" + checkOut + "',";
-				sql += "" + teamNo + ");";
-				stmt.executeUpdate(sql);
-				
-				JOptionPane.showMessageDialog(null, "예약이 완료되었습니다.");
-				System.out.println("예약완료");
-			}
-			
+         if (strRoomNo.equals("")) {
+             JOptionPane.showMessageDialog(null, "내용이 없습니다.");
+             return;
+          } else {
+             sql = "insert into reservation(reser_no,room_no, user_id, check_in, check_out, team_num,memo) values (null,";
+             sql += "" + roomNo + ",";
+             sql += "'"+loginUser+"', ";
+             sql += "'" + checkIn + "',";
+             sql += "'" + checkOut + "',";
+             sql += "" + teamNo + ",";
+             sql += "'"+checkIn+" ~ "+checkOut+" : Room "+roomNo+ "이 예약된 상태입니다.\n');";
+             stmt.executeUpdate(sql);
+             
+             JOptionPane.showMessageDialog(null, "예약이 완료되었습니다.");
+             System.out.println("예약완료");
+          }
 
-			stmt.close();
+         stmt.close();
 
-			cn.close();
+         cn.close();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
 /////////////////////////////////////////////////////////////
 
-	Font fnt = new Font("맑은 고딕", Font.BOLD, 15);
+   Font fnt = new Font("맑은 고딕", Font.BOLD, 15);
 
-	JPanel changePane = new JPanel();
+   JPanel changePane = new JPanel();
 
-	JLabel title = new JLabel("예약 페이지");
+   JLabel title = new JLabel("예약 페이지");
+  
 
-	ImageIcon icon = new ImageIcon("img/calendar.png");
-	JLabel startCalendar = new JLabel(icon);
+   //이미지 크기 조절
+    ImageIcon icon = new ImageIcon(getClass().getResource("/img/calendar.png"));        
+    Image img = icon.getImage();
+    Image changeImg = img.getScaledInstance(30, 30, Image.SCALE_DEFAULT);
+    ImageIcon changeIcon = new ImageIcon(changeImg);
+  
+   JLabel startCalendar = new JLabel(changeIcon);
 
-	JLabel checkInLbl = new JLabel("체크인");
-	static JTextField checkInField = new JTextField();
-	JLabel checkOutLbl = new JLabel("체크아웃");
-	static JTextField checkOutField = new JTextField();
+   JLabel checkInLbl = new JLabel("체크인");
+   static JTextField checkInField = new JTextField();
+   JLabel checkOutLbl = new JLabel("체크아웃");
+   static JTextField checkOutField = new JTextField();
 
-	JLabel roomNumLbl = new JLabel("selected room");
-	static String room[] = { "economy", "VVIP" };
-	static DefaultComboBoxModel<String> roomModel = new DefaultComboBoxModel<String>(room);
-	static JComboBox<String> roomNum = new JComboBox<String>(roomModel);
-	static String cb = "economy";
+   JLabel roomNumLbl = new JLabel("selected room");
+   static String room[] = { "economy", "VVIP" };
+   static DefaultComboBoxModel<String> roomModel = new DefaultComboBoxModel<String>(room);
+   static JComboBox<String> roomNum = new JComboBox<String>(roomModel);
+   static String cb = "economy";
 
-	JLabel teamNumLbl = new JLabel("인원수");
-	static Integer num[] = { 1, 2, 3, 4, 5 };
-	static DefaultComboBoxModel<Integer> numModel = new DefaultComboBoxModel<Integer>(num);
-	static JComboBox<Integer> num2 = new JComboBox<Integer>(numModel);
+   JLabel teamNumLbl = new JLabel("인원수");
+   static Integer num[] = { 1, 2, 3, 4, 5 };
+   static DefaultComboBoxModel<Integer> numModel = new DefaultComboBoxModel<Integer>(num);
+   static JComboBox<Integer> num2 = new JComboBox<Integer>(numModel);
 
-	JButton btnnext = new RoundButton("예약하기");
+   JButton btnnext = new RoundButton("예약하기");
+   JButton btnBack = new RoundButton("취소");
+  
+   int calendarWindowTest = 0;
+   int clickCheck = 0;
+   static int teamNum;
 
-	int calendarWindowTest = 0;
-	int clickCheck = 0;
-	static int teamNum;
+   public Reservation(String loginUSerId) {
+      loginUser = loginUSerId;
+      getContentPane().setLayout(new BorderLayout());
 
-	public Reservation(String loginUSerId) {
-		loginUser =loginUSerId;
-		getContentPane().setLayout(new BorderLayout());
+      setIconImage(new ImageIcon(getClass().getResource("logo.png")).getImage());
+      setTitle("YangNolja");
 
-		setTitle("YangNolja");
+      getContentPane().add(changePane, "Center");
+      changePane.setLayout(null);
+      changePane.setBackground(new Color(255, 255, 255));
 
-		getContentPane().add(changePane, "Center");
-		changePane.setLayout(null);
-		changePane.setBackground(new Color(255, 255, 255));
+      int x = 200;
+      int x1 = 400;
+      int x2 = 500;
+      int y = 80;
+      int y1 = 155;
+      int y2 = 280;
 
-		int x = 200;
-		int x1 = 400;
-		int x2 = 500;
+      changePane.add(title).setBounds(x, y, 200, 50);
+      title.setFont(new Font("맑은 고딕", Font.BOLD, 25));
 
-		changePane.add(title).setBounds(x, 150, 200, 50);
-		title.setFont(new Font("맑은 고딕", Font.BOLD, 25));
+      changePane.add(startCalendar).setBounds(750, y1-50, 50, 50);
+      changePane.add(checkInLbl).setBounds(x, y1, 200, 49);
+      changePane.add(checkInField).setBounds(x1, y1, 400, 49);
+      checkInLbl.setFont(fnt);
+      checkInField.setFont(fnt);
+      
+      checkInLbl.setOpaque(true);
+      checkInLbl.setBackground(new Color(100, 149, 237));
+      checkInLbl.setForeground(new Color(255, 255, 255));
+      checkInLbl.setBorder(BorderFactory.createEmptyBorder(0 , 10, 0 , 0));
+      
+      checkInField.setBorder(BorderFactory.createEmptyBorder(0 , 20, 0 , 0));
+      checkInField.setBorder(BorderFactory.createLineBorder(new Color(100, 149, 237)));
+//      checkInField.setBorder(new EmptyBorder(0 , 20, 0 , 0));
+//      checkInField.setBorder(new LineBorder(new Color(100, 149, 237)));
+      checkInField.setForeground(new Color(130, 151, 189));
 
-		changePane.add(startCalendar).setBounds(750, 230, 50, 50);
-		changePane.add(checkInLbl).setBounds(x, 230, 200, 50);
-		changePane.add(checkInField).setBounds(x1, 230, 350, 50);
-		checkInLbl.setFont(fnt);
-		checkInField.setFont(fnt);
+      
+      changePane.add(checkOutLbl).setBounds(x, y1+55, 200, 49);
+      changePane.add(checkOutField).setBounds(x1, y1+55, 400, 49);
+      checkOutLbl.setFont(fnt);
+      checkOutField.setFont(fnt);
+      checkOutLbl.setOpaque(true);
+      checkOutLbl.setBackground(new Color(100, 149, 237));
+      checkOutLbl.setForeground(new Color(255, 255, 255));
+      checkOutLbl.setBorder(BorderFactory.createEmptyBorder(0 , 10, 0 , 0));
+//      checkOutField.setBorder(new EmptyBorder(0 , 20, 0 , 0));
+      checkOutField.setBorder(new LineBorder(new Color(100, 149, 237)));
+      checkOutField.setForeground(new Color(130, 151, 189));
 
-		changePane.add(checkOutLbl).setBounds(x, 280, 200, 50);
-		changePane.add(checkOutField).setBounds(x1, 280, 400, 50);
-		checkOutLbl.setFont(fnt);
-		checkOutField.setFont(fnt);
 
-		changePane.add(roomNumLbl).setBounds(x, 350, 300, 50);
-		changePane.add(teamNumLbl).setBounds(x2, 350, 300, 50);
-		changePane.add(roomNum).setBounds(x, 400, 300, 50);
-		changePane.add(num2).setBounds(x2, 400, 300, 50);
-		roomNumLbl.setFont(fnt);
-		teamNumLbl.setFont(fnt);
-		roomNum.setFont(fnt);
-		num2.setFont(fnt);
 
-		changePane.add(btnnext).setBounds(x1, 520, 200, 50);
-		btnnext.setFont(fnt);
-		btnnext.setBackground(new Color(100, 149, 237));
-		btnnext.setForeground(new Color(224, 255, 255));
+      changePane.add(roomNumLbl).setBounds(x, y2, 300, 50);
+      changePane.add(teamNumLbl).setBounds(x2, y2, 300, 50);
+      changePane.add(roomNum).setBounds(x, y2+50, 300, 50);
+      changePane.add(num2).setBounds(x2, y2+50, 300, 50);
+      roomNumLbl.setFont(fnt);
+      teamNumLbl.setFont(fnt);
+      roomNum.setFont(fnt);
+      num2.setFont(fnt);
+      roomNum.setForeground(new Color(130, 151, 189));
+      roomNum.setBackground(new Color(255, 255, 255));
+      num2.setForeground(new Color(130, 151, 189));
+      num2.setBackground(new Color(255, 255, 255));
 
-		setBackground(Color.white);
-		setSize(1000, 800);
+      changePane.add(btnnext).setBounds(x2+100, y+350, 200, 50);
+      btnnext.setFont(fnt);
+      btnnext.setBackground(new Color(100, 149, 237));
+      btnnext.setForeground(new Color(224, 255, 255));
+     
+      changePane.add(btnBack).setBounds(x, y+350, 200, 50);
+      btnBack.setFont(fnt);
+      btnBack.setBackground(new Color(100, 149, 237));
+      btnBack.setForeground(new Color(224, 255, 255));//------------
 
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		Point centerPoint = ge.getCenterPoint();
-		int leftTopX = centerPoint.x - getWidth() / 2;
-		int leftTopY = centerPoint.y - getHeight() / 2;
-		this.setLocation(leftTopX, leftTopY);
+      setBackground(Color.white);
+      setSize(1000, 600);
 
-		setVisible(true);
+      GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      Point centerPoint = ge.getCenterPoint();
+      int leftTopX = centerPoint.x - getWidth() / 2;
+      int leftTopY = centerPoint.y - getHeight() / 2;
+      this.setLocation(leftTopX, leftTopY);
 
-		startCalendar.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent me) {
-				me.getSource();
-				if (calendarWindowTest == 0) {
-					new CustomCalendar();
-					calendarWindowTest = 1;
-				} else if (calendarWindowTest == 1) {
-					calendarWindowTest = 0;
-					clickCheck = 0;
-					checkInField.setText("");
-					checkOutField.setText("");
-				}
-			}
-		});
+      setVisible(true);
 
-		btnnext.addActionListener(this);
-	}
+      startCalendar.addMouseListener(new MouseAdapter() {
+         public void mouseClicked(MouseEvent me) {
+            me.getSource();
+            if (calendarWindowTest == 0) {
+               new CustomCalendar();
+               calendarWindowTest = 1;
+            } else if (calendarWindowTest == 1) {
+               calendarWindowTest = 0;
+               clickCheck = 0;
+               checkInField.setText("");
+               checkOutField.setText("");
+            }
+         }
+      });
 
-	public void actionPerformed(ActionEvent ae) {
-		Object obj = ae.getSource();
+      btnnext.addActionListener(this);
+      btnBack.addActionListener(this);
+   }
 
-		if (obj instanceof JButton) {
-			String btn = ae.getActionCommand();
+   public void actionPerformed(ActionEvent ae) {
+      Object obj = ae.getSource();
 
-			if (btn.equals("예약하기")) {
-				if (checkInField.getText().equals("") || checkOutField.getText().equals("")) {
-					JOptionPane.showMessageDialog(this, "날짜를 선택하세요.");
-				} else if (checkInField.getText().equals(checkOutField.getText())) {
-					JOptionPane.showMessageDialog(this, "동일한 날짜 선택은 불가능합니다.");
-				} else if (errorCheck() == 1) {
-					JOptionPane.showMessageDialog(this, "당일 이전일은 선택 불가능합니다.");
-				} else if (dayMinusCheck() == 1) {
-					JOptionPane.showMessageDialog(this, "체크인보다 체크아웃 날짜가 이전일 수 없습니다.");
-				} else {
-					saveInfo();
-					this.setVisible(false);
+      if (obj instanceof JButton) {
+         String btn = ae.getActionCommand();
+
+         if (btn.equals("예약하기")) {
+            if (checkInField.getText().equals("") || checkOutField.getText().equals("")) {
+               JOptionPane.showMessageDialog(this, "날짜를 선택하세요.");
+            } else if (checkInField.getText().equals(checkOutField.getText())) {
+               JOptionPane.showMessageDialog(this, "동일한 날짜 선택은 불가능합니다.");
+            } else if (errorCheck() == 1) {
+               JOptionPane.showMessageDialog(this, "당일 이전일은 선택 불가능합니다.");
+            } else if (dayMinusCheck() == 1) {
+               JOptionPane.showMessageDialog(this, "체크인보다 체크아웃 날짜가 이전일 수 없습니다.");
+            } else if (dayOverCheck()==1) {
+            	JOptionPane.showMessageDialog(this, "연박 불가능합니다. 다시 예약해주세요.");
+            } else {
+               saveInfo();
+               this.setVisible(false);
 // Reservation.reservationCheck.setVisible(true); 다음페이지 연결?
 // Reservation.centerPane.add(Reservation.reservationCheck);
-				}
-			}
-		} else if (obj instanceof JComboBox) {
-			cb = (String) ae.getActionCommand();
-		}
-	}
+            }
+         } else if(btn.equals("취소")) {
+        	 this.setVisible(false);
+         }
+      } else if (obj instanceof JComboBox) {
+         cb = (String) ae.getActionCommand();
+      }
+   }
 
 /// 출발 날짜가 도착 날짜보다 뒤로 설정해보는 엉뚱한 사람을 체크해라!
-	public int dayMinusCheck() {
-		int result = 0;
-		int checkIn = Integer.valueOf(checkInField.getText().replace("/", ""));
-		int checkOut = Integer.valueOf(checkOutField.getText().replace("/", ""));
-		int minusCheck = checkOut - checkIn;
-		if (minusCheck < 0) {
-			result = 1;
-		}
-		return result;
-	}
+   public int dayMinusCheck() {
+      int result = 0;
+      int checkIn = Integer.valueOf(checkInField.getText().replace("/", ""));
+      int checkOut = Integer.valueOf(checkOutField.getText().replace("/", ""));
+      int minusCheck = checkOut - checkIn;
+      if (minusCheck < 0) {
+         result = 1;
+      }
+      return result;
+   }
+   
+   public int dayOverCheck() {
+	      int result = 0;
+	      int checkIn = Integer.valueOf(checkInField.getText().replace("/", ""));
+	      int checkOut = Integer.valueOf(checkOutField.getText().replace("/", ""));
+	      int minusCheck = checkOut - checkIn;
+	      if (minusCheck > 1) {
+	         result = 1;
+	      }
+	      return result;
+	   }
 
 // 출발날짜 선택을 당일보다 전일로 설정 할 경우 걸러낸다
-	public int errorCheck() {
-		int result = 0;
-		int checkIn = Integer.valueOf(checkInField.getText().replace("/", ""));
-		Date date = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		int fmt = Integer.valueOf(format.format(date));
-		int dateCheck = fmt - checkIn;
-		if (dateCheck > 0) {
-			result = 1;
-		}
-		return result;
-	}
+   public int errorCheck() {
+      int result = 0;
+      int checkIn = Integer.valueOf(checkInField.getText().replace("/", ""));
+      Date date = new Date();
+      SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+      int fmt = Integer.valueOf(format.format(date));
+      int dateCheck = fmt - checkIn;
+      if (dateCheck > 0) {
+         result = 1;
+      }
+      return result;
+   }
 
-	class CustomCalendar extends JFrame implements ActionListener, WindowListener {
+   class CustomCalendar extends JFrame implements ActionListener, WindowListener {
+	  
 // 상단 bar
-		JPanel bar = new JPanel();
-		JButton lastMonth = new RoundButton("◀");
+      JPanel bar = new JPanel();
+      JButton lastMonth = new RoundButton("◀");
 
-		JComboBox<Integer> yearCombo = new JComboBox<Integer>();
-		DefaultComboBoxModel<Integer> yearModel = new DefaultComboBoxModel<Integer>();
-		JLabel yLbl = new JLabel("년 ");
+      JComboBox<Integer> yearCombo = new JComboBox<Integer>();
+      DefaultComboBoxModel<Integer> yearModel = new DefaultComboBoxModel<Integer>();
+      JLabel yLbl = new JLabel("년 ");
 
-		JComboBox<Integer> monthCombo = new JComboBox<Integer>();
-		DefaultComboBoxModel<Integer> monthModel = new DefaultComboBoxModel<Integer>();
-		JLabel mLbl = new JLabel("월");
-		JButton nextMonth = new RoundButton("▶");
+      JComboBox<Integer> monthCombo = new JComboBox<Integer>();
+      DefaultComboBoxModel<Integer> monthModel = new DefaultComboBoxModel<Integer>();
+      JLabel mLbl = new JLabel("월");
+      JButton nextMonth = new RoundButton("▶");
 
 // 중앙 날짜
-		JPanel center = new JPanel(new BorderLayout());
+      JPanel center = new JPanel(new BorderLayout());
+      
 // 중앙상단
-		JPanel cntNorth = new JPanel(new GridLayout(0, 7));
+      JPanel cntNorth = new JPanel(new GridLayout(0, 7));
 // 정중앙
-		JPanel cntCenter = new JPanel(new GridLayout(0, 7));
+      JPanel cntCenter = new JPanel(new GridLayout(0, 7));
+
 //요일 입력
-		String dw[] = { "일", "월", "화", "수", "목", "금", "토" };
+      String dw[] = { "일", "월", "화", "수", "목", "금", "토" };
 
-		Calendar now = Calendar.getInstance();
-		int year, month, date;
+      Calendar now = Calendar.getInstance();
+      int year, month, date;
 
-		public CustomCalendar() {
-			year = now.get(Calendar.YEAR);
-			month = now.get(Calendar.MONTH) + 1; //
-			date = now.get(Calendar.DATE);
-			for (int i = year; i <= year + 50; i++) {
-				yearModel.addElement(i);
-			}
-			for (int i = 1; i <= 12; i++) {
-				monthModel.addElement(i);
-			}
+      public CustomCalendar() {
+    	 setIconImage(new ImageIcon(getClass().getResource("logo.png")).getImage());
+         cntCenter.setOpaque(true);
+         cntCenter.setBackground(new Color(255, 255, 255));
+         
+         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+         Point centerPoint = ge.getCenterPoint();
+         int leftTopX = (centerPoint.x - getWidth() / 2) + 300;
+         int leftTopY = (centerPoint.y - getHeight() / 2) - 150;
+         this.setLocation(leftTopX, leftTopY);
+    	 
+         year = now.get(Calendar.YEAR);
+         month = now.get(Calendar.MONTH) + 1; //
+         date = now.get(Calendar.DATE);
+         for (int i = year; i <= year + 50; i++) {
+            yearModel.addElement(i);
+         }
+         for (int i = 1; i <= 12; i++) {
+            monthModel.addElement(i);
+         }
 
 ///프레임
+         bar.setFont(new Font("맑은 고딕", Font.BOLD, 25));
+         yearCombo.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+         monthCombo.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+         yearCombo.setOpaque(true);
+         yearCombo.setBackground(new Color(255, 255, 255));
+         monthCombo.setOpaque(true);
+         monthCombo.setBackground(new Color(255, 255, 255));
 // 상단
-			add(bar, "North");
-			bar.setLayout(new FlowLayout());
-			bar.setSize(300, 400);
-			bar.add(lastMonth);
+         add(bar, "North");
+         bar.setLayout(new FlowLayout());
+         bar.setSize(300, 400);
+         bar.add(lastMonth);
+         
 ///////////달력
-			bar.add(yearCombo);
-			yearCombo.setModel(yearModel);
-			yearCombo.setSelectedItem(year);
+         bar.add(yearCombo);
+         yearCombo.setModel(yearModel);
+         yearCombo.setSelectedItem(year);
 
-			bar.add(yLbl);
-			bar.add(monthCombo);
-			monthCombo.setModel(monthModel);
-			monthCombo.setSelectedItem(month);
+         bar.add(yLbl);
+         bar.add(monthCombo);
+         monthCombo.setModel(monthModel);
+         monthCombo.setSelectedItem(month);
 
-			bar.add(mLbl);
-			bar.add(nextMonth);
-			bar.setBackground(new Color(100, 149, 237));
+         bar.add(mLbl);
+         bar.add(nextMonth);
+         bar.setBackground(new Color(100, 149, 237));
 // 중앙지역
-			add(center, "Center");
+         add(center, "Center");
+        
 //중앙상단
-			center.add(cntNorth, "North");
-			for (int i = 0; i < dw.length; i++) {
-				JLabel dayOfWeek = new JLabel(dw[i], JLabel.CENTER);
-				if (i == 0)
-					dayOfWeek.setForeground(Color.red);
-				else if (i == 6)
-					dayOfWeek.setForeground(Color.blue);
-				cntNorth.add(dayOfWeek);
-			}
+         center.add(cntNorth, "North");
+         for (int i = 0; i < dw.length; i++) {
+            JLabel dayOfWeek = new JLabel(dw[i], JLabel.CENTER);
+            if (i == 0)
+               dayOfWeek.setForeground(Color.red);
+            else if (i == 6)
+               dayOfWeek.setForeground(Color.blue);
+            cntNorth.add(dayOfWeek);
+            dayOfWeek.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+            dayOfWeek.setOpaque(true);
+            dayOfWeek.setBackground(new Color(255, 255, 255));
+         }
 // 정중앙
-			center.add(cntCenter, "Center");
-			dayPrint(year, month);
+         center.add(cntCenter, "Center");
+         dayPrint(year, month);
 
 // 이벤트
-			yearCombo.addActionListener(this);
-			monthCombo.addActionListener(this);
-			lastMonth.addActionListener(this);
-			nextMonth.addActionListener(this);
-			addWindowListener(this);
+         yearCombo.addActionListener(this);
+         monthCombo.addActionListener(this);
+         lastMonth.addActionListener(this);
+         nextMonth.addActionListener(this);
+         addWindowListener(this);
 
 // frame 기본세팅
-			setSize(400, 300);
-			setVisible(true);
-			setResizable(false);
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         setSize(400, 300);
+         setVisible(true);
+         setResizable(false);
+         
+         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 // setLocation(750,230);
-		}
+      }
 
 // 이벤트처리
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Object obj = e.getSource();
-			if (obj instanceof JButton) {
-				JButton eventBtn = (JButton) obj;
-				int yy = (Integer) yearCombo.getSelectedItem();
-				int mm = (Integer) monthCombo.getSelectedItem();
-				if (eventBtn.equals(lastMonth)) {
-					if (mm == 1 && yy == year) {
-					} else if (mm == 1) {
-						yy--;
-						mm = 12;
-					} else {
-						mm--;
-					}
-				} else if (eventBtn.equals(nextMonth)) {
-					if (mm == 12) {
-						yy++;
-						mm = 1;
-					} else {
-						mm++;
-					}
-				}
-				yearCombo.setSelectedItem(yy);
-				monthCombo.setSelectedItem(mm);
-			} else if (obj instanceof JComboBox) {
-				createDayStart();
-			}
-		}
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         Object obj = e.getSource();
+         if (obj instanceof JButton) {
+            JButton eventBtn = (JButton) obj;
+            int yy = (Integer) yearCombo.getSelectedItem();
+            int mm = (Integer) monthCombo.getSelectedItem();
+            if (eventBtn.equals(lastMonth)) {
+               if (mm == 1 && yy == year) {
+               } else if (mm == 1) {
+                  yy--;
+                  mm = 12;
+               } else {
+                  mm--;
+               }
+            } else if (eventBtn.equals(nextMonth)) {
+               if (mm == 12) {
+                  yy++;
+                  mm = 1;
+               } else {
+                  mm++;
+               }
+            }
+            yearCombo.setSelectedItem(yy);
+            monthCombo.setSelectedItem(mm);
+         } else if (obj instanceof JComboBox) {
+            createDayStart();
+         }
+      }
 
-		private void createDayStart() {
-			cntCenter.setVisible(false);
-			cntCenter.removeAll();
-			dayPrint((Integer) yearCombo.getSelectedItem(), (Integer) monthCombo.getSelectedItem());
-			cntCenter.setVisible(true);
-		}
+      private void createDayStart() {
+         cntCenter.setVisible(false);
+         cntCenter.removeAll();
+         dayPrint((Integer) yearCombo.getSelectedItem(), (Integer) monthCombo.getSelectedItem());
+         cntCenter.setVisible(true);
+      }
 
 //날짜출력
-		public void dayPrint(int y, int m) {
-			Calendar cal = Calendar.getInstance();
-			cal.set(y, m - 1, 1);
-			int week = cal.get(Calendar.DAY_OF_WEEK); // 1일에 대한 요일
-			int lastDate = cal.getActualMaximum(Calendar.DAY_OF_MONTH); // 1월에 대한 마지막 요일
-			for (int i = 1; i < week; i++) {
-				cntCenter.add(new JLabel(""));
-			}
-			for (int i = 0; i <= lastDate - 1; i++) {
-				JLabel day = new JLabel();
-				day.setHorizontalAlignment(JLabel.CENTER);
-				if ((week + i) % 7 == 0) {
-					cntCenter.add(day).setForeground(Color.blue);
-					day.setText(1 + i + "");
-				} else if ((week + i) % 7 == 1) {
-					cntCenter.add(day).setForeground(Color.red);
-					day.setText(1 + i + "");
-				} else {
-					cntCenter.add(day);
-					day.setText(1 + i + "");
-				}
+      public void dayPrint(int y, int m) {
+         Calendar cal = Calendar.getInstance();
+         cal.set(y, m - 1, 1);
+         int week = cal.get(Calendar.DAY_OF_WEEK); // 1일에 대한 요일
+         int lastDate = cal.getActualMaximum(Calendar.DAY_OF_MONTH); // 1월에 대한 마지막 요일
+         for (int i = 1; i < week; i++) {
+            cntCenter.add(new JLabel(""));
+         }
+         for (int i = 0; i <= lastDate - 1; i++) {
+            JLabel day = new JLabel();
+            day.setHorizontalAlignment(JLabel.CENTER);
+            if ((week + i) % 7 == 0) {
+               cntCenter.add(day).setForeground(Color.blue);
+               day.setText(1 + i + "");
+            } else if ((week + i) % 7 == 1) {
+               cntCenter.add(day).setForeground(Color.red);
+               day.setText(1 + i + "");
+            } else {
+               cntCenter.add(day);
+               day.setText(1 + i + "");
+            }
 
-				day.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent me) {
-						JLabel mouseClick = (JLabel) me.getSource();
-						String str = mouseClick.getText();
-						String y = "" + yearCombo.getSelectedItem();
-						String m = "" + monthCombo.getSelectedItem();
+            day.addMouseListener(new MouseAdapter() {
+               public void mouseClicked(MouseEvent me) {
+                  JLabel mouseClick = (JLabel) me.getSource();
+                  String str = mouseClick.getText();
+                  String y = "" + yearCombo.getSelectedItem();
+                  String m = "" + monthCombo.getSelectedItem();
 
 // 받은 "요일"이 1자리면 앞에 0을 붙여 출력
-						if (str.equals(""))
-							;
-						else if (str.length() == 1)
-							str = "0" + str;
+                  if (str.equals(""))
+                     ;
+                  else if (str.length() == 1)
+                     str = "0" + str;
 
 // 받은 월 :"
-						if (m.length() == 1)
-							m = "0" + m;
+                  if (m.length() == 1)
+                     m = "0" + m;
 
-						if (clickCheck == 0) {
-							checkInField.setText(y + "/" + m + "/" + str);
-							checkInField.setEnabled(false);
-							clickCheck++;
-						} else if (clickCheck == 1) {
-							checkOutField.setText(y + "/" + m + "/" + str);
-							checkOutField.setEnabled(false);
-							clickCheck--;
-						}
-					}
-				});
-			}
-		}
+                  if (clickCheck == 0) {
+                     checkInField.setText(y + "/" + m + "/" + str);
+                     checkInField.setEnabled(false);
+                     clickCheck++;
+                  } else if (clickCheck == 1) {
+                     checkOutField.setText(y + "/" + m + "/" + str);
+                     checkOutField.setEnabled(false);
+                     clickCheck--;
+                  }
+               }
+            });
+         }
+      }
 
-		public void windowOpened(WindowEvent e) {
-			calendarWindowTest = 1;
-		}
+      public void windowOpened(WindowEvent e) {
+         calendarWindowTest = 1;
+      }
 
-		public void windowClosing(WindowEvent e) {
-			calendarWindowTest = 1;
-		}
+      public void windowClosing(WindowEvent e) {
+         calendarWindowTest = 1;
+      }
 
-		public void windowClosed(WindowEvent e) {}
-		public void windowIconified(WindowEvent e) {}
-		public void windowDeiconified(WindowEvent e) {}
-		public void windowActivated(WindowEvent e) {}
-		public void windowDeactivated(WindowEvent e) {}
+      public void windowClosed(WindowEvent e) {
+      }
 
-	}
+      public void windowIconified(WindowEvent e) {
+      }
 
-	/*public static void main(String[] args) {
-		String id = "test";
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				Reservation jFrame = new Reservation(id);
-				jFrame.setVisible(true);
-			}
-		});
+      public void windowDeiconified(WindowEvent e) {
+      }
 
-	}*/
+      public void windowActivated(WindowEvent e) {
+      }
 
-}
+      public void windowDeactivated(WindowEvent e) {
+      }
+
+   }
+
+   
+   public static void main(String[] args) { String id = "test";
+   	SwingUtilities.invokeLater(new Runnable() { public void run() { Reservation
+    jFrame = new Reservation(id); jFrame.setVisible(true); } });
+   
+   }
+    
+
+} 
