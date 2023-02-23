@@ -41,6 +41,7 @@ public class Reservation extends JFrame implements ActionListener {
    JFrame setCheckInOutDate;
 //DB연결//////////////////////////////////////////////////////
 
+   ConnectionDB connDB;
    Connection cn = null;
 
    String driver = "com.mysql.cj.jdbc.Driver";
@@ -72,7 +73,7 @@ public class Reservation extends JFrame implements ActionListener {
    public void saveInfo() {
       try {
          dbConnect();
-
+         
          String checkIn = checkInField.getText();
          String checkOut = checkOutField.getText();
          String strRoomNo = roomNum.getSelectedItem().toString();
@@ -123,16 +124,17 @@ public class Reservation extends JFrame implements ActionListener {
 
    JLabel checkInLbl = new JLabel("체크인");
    static JTextField checkInField = new JTextField();
+   
    JLabel checkOutLbl = new JLabel("체크아웃");
    static JTextField checkOutField = new JTextField();
 
-   JLabel roomNumLbl = new JLabel("selected room");
+   JLabel roomNumLbl = new JLabel("방 선택");
    static String room[] = { "economy", "VVIP" };
    static DefaultComboBoxModel<String> roomModel = new DefaultComboBoxModel<String>(room);
    static JComboBox<String> roomNum = new JComboBox<String>(roomModel);
    static String cb = "economy";
 
-   JLabel teamNumLbl = new JLabel("인원수");
+   JLabel teamNumLbl = new JLabel("인원 수");
    static Integer num[] = { 1, 2, 3, 4, 5 };
    static DefaultComboBoxModel<Integer> numModel = new DefaultComboBoxModel<Integer>(num);
    static JComboBox<Integer> num2 = new JComboBox<Integer>(numModel);
@@ -145,11 +147,17 @@ public class Reservation extends JFrame implements ActionListener {
    static int teamNum;
 
    public Reservation(String loginUSerId) {
+	  connDB = new ConnectionDB();
       loginUser = loginUSerId;
       getContentPane().setLayout(new BorderLayout());
+      checkInField.setEditable(false);
+      checkOutField.setEditable(false);
+      checkInField.setBackground(Color.white);
+      checkOutField.setBackground(Color.white);
 
       setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
       setTitle("YangNolja");
+      setResizable(false); // 창크기 고정
 
       getContentPane().add(changePane, "Center");
       changePane.setLayout(null);
@@ -246,7 +254,7 @@ public class Reservation extends JFrame implements ActionListener {
 
    public void actionPerformed(ActionEvent ae) {
       Object obj = ae.getSource();
-
+  
       if (obj instanceof JButton) {
          String btn = ae.getActionCommand();
 
@@ -261,7 +269,9 @@ public class Reservation extends JFrame implements ActionListener {
                JOptionPane.showMessageDialog(this, "체크인보다 체크아웃 날짜가 이전일 수 없습니다.");
             } else if (dayOverCheck()==1) {
             	JOptionPane.showMessageDialog(this, "연박 불가능합니다. 다시 예약해주세요.");
-            } else {
+            } else if(doubleCheck(checkInField.getText(),roomNum.getSelectedIndex()+1)==1) {
+            	JOptionPane.showMessageDialog(this, "이미 예약된 날짜입니다. 다시 예약해주세요.");
+            }else {
                saveInfo();
                this.setVisible(false);
                setCheckInOutDate.setVisible(false);
@@ -270,6 +280,10 @@ public class Reservation extends JFrame implements ActionListener {
             }
          } else if(btn.equals("취소")) {
         	 this.setVisible(false);
+        	 if(setCheckInOutDate != null) {
+        		 setCheckInOutDate.setVisible(false);
+        	 }
+        	 
          }
       } else if (obj instanceof JComboBox) {
          cb = (String) ae.getActionCommand();
@@ -311,6 +325,28 @@ public class Reservation extends JFrame implements ActionListener {
          result = 1;
       }
       return result;
+   }
+
+// 중복 예약정보 확인
+   public int doubleCheck(String checkinDate, int roomNumber) {
+	   int result =0;
+	   String ci = checkinDate.replace("/", "-");
+	   
+	   String dbCI="";
+	   int dbRN=0;
+	   for(int i=0; i<connDB.reserTblListAll.size(); i++) {
+		   dbCI = connDB.reserTblListAll.get(i).getCheckIn().toString();
+		   dbRN = connDB.reserTblListAll.get(i).getRoomNo();
+		   
+		   if(dbCI.equals(ci) && roomNumber==dbRN) {
+			   result=1;
+			   break;
+		   }
+	   }
+	   
+	   System.out.println(ci + "~~ " +roomNumber);
+	   System.out.println(dbRN + "~~ " +dbCI);
+	   return result;
    }
 
    class CustomCalendar extends JFrame implements ActionListener, WindowListener {

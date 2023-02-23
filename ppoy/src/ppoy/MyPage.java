@@ -67,10 +67,11 @@ public class MyPage extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
+		this.setResizable(false); // 창크기 고정
 		getContentPane().setLayout(null);
 
 		//JLabel PageName = new JLabel("My Page["+id+"]");
-		JLabel PageName = new JLabel(" "+id+"님의 예약"); //이모티콘 추가
+		JLabel PageName = new JLabel(" "+id+"님의 예약정보"); //이모티콘 추가
 		PageName.setIcon(new ImageIcon(MyPage.class.getResource("/img/user.png")));
 		PageName.setFont(new Font("맑은 고딕", Font.BOLD, 25));
 		PageName.setBounds(37, 25, 776, 56);

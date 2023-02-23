@@ -19,19 +19,54 @@ public class ConnectionDB {
 	String pwd = "ppoy";
 	
 	ArrayList<Users> userTblList = new ArrayList<>();
-	ArrayList<ReservationTbl> reserTblList = new ArrayList<>();
+	ArrayList<ReservationTbl> reserTblList = new ArrayList<>(); //로그인한 유저의 예약정보
+	ArrayList<ReservationTbl> reserTblListAll = new ArrayList<>(); // 모든 유저의 예약정보
 	
 	public void dbconnect() {
 		try {
 			Class.forName(driver);
 			conn = DriverManager.getConnection(url, user, pwd);
 			stmt = conn.createStatement();
+		
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
-	
+	public ConnectionDB() {
+		try {
+			//JDBC Driver 등록
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			//연결하기
+			conn = DriverManager.getConnection(
+				"jdbc:mysql://222.119.100.81:3382/ppoy", 
+				"ppoy", 
+				"ppoy"
+			);
+			
+			//reserTblListAll
+			String sqlReserAll = "select room_no, check_in from reservation;";	
+		
+			PreparedStatement pstmtReserAll = conn.prepareStatement(sqlReserAll);			
+			ResultSet rs3 = pstmtReserAll.executeQuery();
+			//System.out.println("[reservation 테이블 데이터]");
+			while(rs3.next()) {
+				ReservationTbl reserAll = new ReservationTbl();
+				reserAll.setRoomNo(rs3.getInt("room_no"));
+				reserAll.setCheckIn(rs3.getDate("check_in"));
+				reserTblListAll.add(reserAll);
+				
+				System.out.println("all:"+reserAll);
+			}
+			
+			rs3.close();
+			pstmtReserAll.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public ConnectionDB(String loginId) {
 		try {
 			//JDBC Driver 등록
@@ -79,15 +114,18 @@ public class ConnectionDB {
 				reser.setTeamNum(rs2.getInt("team_num"));
 				reserTblList.add(reser);
 				
-				//System.out.println(reser);
+				System.out.println(reser);
 			}
 		
+			
 			
 			rs.close();
 			rs2.close();
 			
+			
 			pstmtUser.close();
 			pstmtReser.close();
+			
 			
 			//예약 삭제
 			/*String sqlDelReser = "delete from reservation where reser_no =?";

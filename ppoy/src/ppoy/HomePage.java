@@ -24,9 +24,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
+import javax.swing.SwingConstants;
 
 class ImageWindow extends JFrame {
 	public ImageWindow(ImageIcon imageIcon) {
@@ -44,6 +48,9 @@ class ImageWindow extends JFrame {
 
 		// 창 표시
 		frame.setVisible(true);
+		
+		//창크기 고정
+		frame.setResizable(false);
 	}
 }
 
@@ -94,7 +101,7 @@ class HomePage extends JFrame implements ActionListener
 	String checkOut = "";
 
 	public HomePage(String id) {
-
+		setResizable(false);//창크기 고정
 		today = Calendar.getInstance(); // 디폴트의 타임 존 및 로케일을 사용해 달력을 가져옵니다.
 		cal = new GregorianCalendar();
 
@@ -108,6 +115,13 @@ class HomePage extends JFrame implements ActionListener
 
 		// panNorth : 이전 월, 연 월 표시, 다음 월
 		panNorth = new JPanel();
+		
+		//test
+		JPanel blankPan = new JPanel();
+		blankPan.setPreferredSize(new Dimension(160, 50));
+		blankPan.setBackground(Color.white);
+		panNorth.add(blankPan);
+				
 		panNorth.add(btnBefore = new JButton("  ◀  "));
 		panNorth.add(txtYear = new JTextField(year + "년 "));
 		panNorth.add(txtMonth = new JTextField(month + "월"));
@@ -118,7 +132,14 @@ class HomePage extends JFrame implements ActionListener
 		txtMonth.setEnabled(false); // 이벤트 막음
 		txtMonth.setBorder(null);
 
-		panNorth.add(myPage = new JButton(id + " 님의 PAGE "));
+		//test
+		JPanel blankPan2 = new JPanel();
+		blankPan2.setPreferredSize(new Dimension(175, 50));
+		blankPan2.setBackground(Color.white);
+		panNorth.add(blankPan2);
+		
+		//panNorth.add(myPage = new JButton(id + " 님의 PAGE "));
+		panNorth.add(myPage = new JButton(" INFO  "));
 		//이미지 크기 조절
 	    ImageIcon icon = new ImageIcon(getClass().getResource("/img/user.png"));			
 	    Image img = icon.getImage();
@@ -126,8 +147,9 @@ class HomePage extends JFrame implements ActionListener
 	    ImageIcon changeIcon = new ImageIcon(changeImg);
 		
 		myPage.setIcon(changeIcon);
+	
 		myPage.setHorizontalTextPosition(JLabel.LEFT);
-		panNorth.add(btnLogout = new JButton("LOGOUT "));
+		panNorth.add(btnLogout = new JButton(" LOGOUT  "));
 		
 		//이미지 크기 조절
 	    ImageIcon icon2 = new ImageIcon(getClass().getResource("/img/logout.png"));			
@@ -203,10 +225,12 @@ class HomePage extends JFrame implements ActionListener
 
 		// panSouth : 메모 만들기
 		panSouth = new JPanel();
+		panSouth.setBorder(new EmptyBorder(0, 0, 5, 0));
 		panSouth.add(time = new JLabel("CHECK▶"));
 		time.setBounds(100, 50, 70, 60);
 		panSouth.add(txtWrite = new JTextArea());
 		txtWrite.setPreferredSize(new Dimension(900, 100));
+		txtWrite.setEditable(false);
 		// 메모를 입력받을 텍스트 박스를 가로 200 세로 50에 생성
 		txtWrite.setFont(f2);
 		getContentPane().add(panSouth, BorderLayout.SOUTH);
@@ -217,7 +241,6 @@ class HomePage extends JFrame implements ActionListener
 		panEast = new JPanel();
 		JLabel jLabel1 = new JLabel();
 		JLabel jLabel2 = new JLabel();
-		panEast.setLayout(new GridLayout(5, 1, 0, 0));
 
 		jLabel1.setIcon(new ImageIcon(getClass().getResource("/img/room1.jpg")));
 		jLabel2.setIcon(new ImageIcon(getClass().getResource("/img/room2.jpg")));
@@ -250,19 +273,32 @@ class HomePage extends JFrame implements ActionListener
 				ImageWindow imageWindow = new ImageWindow(imageIcon2);
 			}
 		});
+		panEast.setLayout(new GridLayout(5, 1, 0, 0));
 
 		panEast.add(jLabel1);
 		panEast.add(new JLabel(
-				"<html><p style = 'font-family:맑은 고딕', 'font-size:10px'><span style = 'color:red;'>[★연박불가★]</span> economy(Room 1) : <br> 누우면 잠이 솔솔 오는 아늑한 방.</p> </html>"));
+				"<html>"
+				+ "<p style = 'font-family:맑은 고딕', 'font-size:10px'>"
+				+ "<span style = 'font-size:11px; font-weight:bold;'>"
+				+ "<span style = 'color:red; '>[★연박불가★]</span>"
+				+ " economy(Room 1)</span>"
+				+ "<br> 누우면 잠이 솔솔 오는 아늑한 방.</p> "
+				+ "</html>"));
 		panEast.add(jLabel2);
 		panEast.add(new JLabel(
-				"<html><p style = 'font-family:맑은 고딕', 'font-size:10px'><span style = 'color:red;'>[★연박불가★]</span> VVIP(Room 2) : <br> 럭셔리하고 세련된 풀옵션 오션 뷰 룸.</p></html>"));
+				"<html>"
+				+ "<p style = 'font-family:맑은 고딕', 'font-size:10px'>"
+				+ "<span style = 'font-size:11px; font-weight:bold;'>"
+				+ "<span style = 'color:red;'>[★연박불가★]</span>"
+				+ " VVIP(Room 2)</span>"
+				+ "<br> 럭셔리하고 세련된 풀옵션 오션 뷰 룸.</p>"
+				+ "</html>"));
 		panEast.add(btnRoom1 = new RoundButton("예약 하기"));
 
 		btnRoom1.setForeground(Color.white);
 		btnRoom1.setBackground(new Color(100, 149, 237));
 		btnRoom1.setFont(f3);
-		panEast.setBorder(new EmptyBorder(0, 0, 0, 15));
+		panEast.setBorder(new EmptyBorder(10, 0, 10, 15));
 
 		btnRoom1.addActionListener(new ActionListener() {
 			@Override
@@ -521,10 +557,10 @@ class HomePage extends JFrame implements ActionListener
 			sql += clickDate + "'";
 
 			rs = stmt.executeQuery(sql);
-			String gettemp = "";
+			String gettemp = "\n";
 
 			while (rs.next()) {
-				gettemp += rs.getString("memo") + "  ";
+				gettemp +=" - "+ rs.getString("memo")+"\n";
 			}
 			txtWrite.setText(gettemp);
 
