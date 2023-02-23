@@ -20,6 +20,7 @@ public class ConnectionDB {
 	
 	ArrayList<Users> userTblList = new ArrayList<>();
 	ArrayList<ReservationTbl> reserTblList = new ArrayList<>();
+	ArrayList<ReservationTbl> reserTblListAll = new ArrayList<>();
 	
 	public void dbconnect() {
 		try {
@@ -81,13 +82,29 @@ public class ConnectionDB {
 				
 				//System.out.println(reser);
 			}
-		
+			
+			
+			String sqlReserAll = "select room_no, check_in from reservation;";	
+			System.out.println("login : " +loginId);
+			PreparedStatement pstmtReserAll = conn.prepareStatement(sqlReserAll);			
+			ResultSet rs3 = pstmtReserAll.executeQuery();
+			//System.out.println("[reservation 테이블 데이터]");
+			while(rs3.next()) {
+				ReservationTbl reser3 = new ReservationTbl();
+				reser3.setRoomNo(rs3.getInt("room_no"));
+				reser3.setCheckIn(rs3.getDate("check_in"));
+				reserTblListAll.add(reser3);
+				
+				//System.out.println(reser);
+			}
 			
 			rs.close();
 			rs2.close();
+			rs3.close();
 			
 			pstmtUser.close();
 			pstmtReser.close();
+			pstmtReserAll.close();
 			
 			//예약 삭제
 			/*String sqlDelReser = "delete from reservation where reser_no =?";

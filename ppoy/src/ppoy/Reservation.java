@@ -41,6 +41,7 @@ public class Reservation extends JFrame implements ActionListener {
    JFrame setCheckInOutDate;
 //DB연결//////////////////////////////////////////////////////
 
+   ConnectionDB conDB = new ConnectionDB("");
    Connection cn = null;
 
    String driver = "com.mysql.cj.jdbc.Driver";
@@ -261,15 +262,18 @@ public class Reservation extends JFrame implements ActionListener {
                JOptionPane.showMessageDialog(this, "체크인보다 체크아웃 날짜가 이전일 수 없습니다.");
             } else if (dayOverCheck()==1) {
             	JOptionPane.showMessageDialog(this, "연박 불가능합니다. 다시 예약해주세요.");
-            } else {
+            }else if(doubleCheck(checkInField.getText(),roomNum.getSelectedIndex()+1)==1) {
+            	JOptionPane.showMessageDialog(this, "연박 불가능합니다. 다시 예약해주세요.");
+            }
+            else {
                saveInfo();
                this.setVisible(false);
                setCheckInOutDate.setVisible(false);
-// Reservation.reservationCheck.setVisible(true); 다음페이지 연결?
-// Reservation.centerPane.add(Reservation.reservationCheck);
+
             }
          } else if(btn.equals("취소")) {
         	 this.setVisible(false);
+        	 setCheckInOutDate.setVisible(false);
          }
       } else if (obj instanceof JComboBox) {
          cb = (String) ae.getActionCommand();
@@ -286,6 +290,24 @@ public class Reservation extends JFrame implements ActionListener {
          result = 1;
       }
       return result;
+   }
+   
+   public int doubleCheck(String checkindate, int roomnumber) {
+	   int result =0;
+	   int preRoomNum=0;
+	   String preCheckIn="";
+	   int checkIn = Integer.valueOf(checkInField.getText().replace("/", ""));
+	   
+	   for(int i=0; i<conDB.reserTblListAll.size(); i++) {
+		   preRoomNum=conDB.reserTblListAll.get(i).getRoomNo();
+		   preCheckIn=conDB.reserTblListAll.get(i).getCheckIn().toString();
+		   if(checkindate.equals(preCheckIn) && roomnumber==preRoomNum) {
+			   result=1;
+			   break;
+		   }
+		   
+	   }
+	   return result;
    }
    
    public int dayOverCheck() {

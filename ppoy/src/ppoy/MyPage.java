@@ -152,6 +152,7 @@ public class MyPage extends JFrame {
 			//셀 간격 조정
 			DefaultTableCellRenderer celAlignCenter = new DefaultTableCellRenderer();
 			celAlignCenter.setHorizontalAlignment(JLabel.CENTER);
+			
 			DefaultTableCellRenderer celAlignRight = new DefaultTableCellRenderer();
 			celAlignRight.setHorizontalAlignment(JLabel.RIGHT);
 			
