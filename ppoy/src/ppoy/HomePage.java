@@ -48,8 +48,8 @@ class ImageWindow extends JFrame {
 
 		// 창 표시
 		frame.setVisible(true);
-		
-		//창크기 고정
+
+		// 창크기 고정
 		frame.setResizable(false);
 	}
 }
@@ -101,27 +101,22 @@ class HomePage extends JFrame implements ActionListener
 	String checkOut = "";
 
 	public HomePage(String id) {
-		setResizable(false);//창크기 고정
+		setResizable(false);// 창크기 고정
 		today = Calendar.getInstance(); // 디폴트의 타임 존 및 로케일을 사용해 달력을 가져옵니다.
-		cal = new GregorianCalendar();
-
-		/*
-		 * GregorianCalendar 는,Calendar 의 구상 서브 클래스이며, 세계의 대부분의 지역에서 사용되는 표준적인 달력 시스템을
-		 * 제공합니다.
-		 */
+		cal = new GregorianCalendar(); // Calendar 구상 서브 클래스
 
 		year = today.get(Calendar.YEAR);
 		month = today.get(Calendar.MONTH) + 1;// 1월의 값이 0
 
 		// panNorth : 이전 월, 연 월 표시, 다음 월
 		panNorth = new JPanel();
-		
-		//test
+
+		// test
 		JPanel blankPan = new JPanel();
 		blankPan.setPreferredSize(new Dimension(160, 50));
 		blankPan.setBackground(Color.white);
 		panNorth.add(blankPan);
-				
+
 		panNorth.add(btnBefore = new JButton("  ◀  "));
 		panNorth.add(txtYear = new JTextField(year + "년 "));
 		panNorth.add(txtMonth = new JTextField(month + "월"));
@@ -132,31 +127,29 @@ class HomePage extends JFrame implements ActionListener
 		txtMonth.setEnabled(false); // 이벤트 막음
 		txtMonth.setBorder(null);
 
-		//test
+		// 위치 조정
 		JPanel blankPan2 = new JPanel();
 		blankPan2.setPreferredSize(new Dimension(175, 50));
 		blankPan2.setBackground(Color.white);
 		panNorth.add(blankPan2);
-		
-		//panNorth.add(myPage = new JButton(id + " 님의 PAGE "));
+
 		panNorth.add(myPage = new JButton(" INFO  "));
-		//이미지 크기 조절
-	    ImageIcon icon = new ImageIcon(getClass().getResource("/img/user.png"));			
-	    Image img = icon.getImage();
-	    Image changeImg = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-	    ImageIcon changeIcon = new ImageIcon(changeImg);
-		
+		// 이미지 크기 조절
+		ImageIcon icon = new ImageIcon(getClass().getResource("/img/user.png"));
+		Image img = icon.getImage();
+		Image changeImg = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		ImageIcon changeIcon = new ImageIcon(changeImg);
 		myPage.setIcon(changeIcon);
-	
+		
 		myPage.setHorizontalTextPosition(JLabel.LEFT);
 		panNorth.add(btnLogout = new JButton(" LOGOUT  "));
-		
-		//이미지 크기 조절
-	    ImageIcon icon2 = new ImageIcon(getClass().getResource("/img/logout.png"));			
-	    Image img2 = icon2.getImage();
-	    Image changeImg2 = img2.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-	    ImageIcon changeIcon2 = new ImageIcon(changeImg2);
-	    
+
+		// 이미지 크기 조절
+		ImageIcon icon2 = new ImageIcon(getClass().getResource("/img/logout.png"));
+		Image img2 = icon2.getImage();
+		Image changeImg2 = img2.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		ImageIcon changeIcon2 = new ImageIcon(changeImg2);
+
 		btnLogout.setIcon(changeIcon2);
 		btnLogout.setHorizontalTextPosition(JLabel.LEFT);
 
@@ -171,7 +164,7 @@ class HomePage extends JFrame implements ActionListener
 		myPage.setForeground(new Color(67, 117, 218));
 		myPage.setBackground(new Color(255, 255, 255));
 		myPage.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				MyPage myPage = new MyPage(id);
@@ -208,10 +201,6 @@ class HomePage extends JFrame implements ActionListener
 		getContentPane().add(panNorth, "North");
 		setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
 
-		/*
-		 * HomePage라는 큰놈 위에 레이아웃을 동,서,남,북으로 나눠서 패널을 하나 하나 올려 놓는 형식이다. 메인보드 위에 부품이 하나 하나
-		 * 조립되듯.....
-		 */
 
 		// panCenter : 날짜, 요일 버튼
 		// 달력에 날에 해당하는 부분
@@ -231,13 +220,14 @@ class HomePage extends JFrame implements ActionListener
 		panSouth.add(txtWrite = new JTextArea());
 		txtWrite.setPreferredSize(new Dimension(900, 100));
 		txtWrite.setEditable(false);
+		
 		// 메모를 입력받을 텍스트 박스를 가로 200 세로 50에 생성
 		txtWrite.setFont(f2);
 		getContentPane().add(panSouth, BorderLayout.SOUTH);
 		txtWrite.setBackground(new Color(180, 201, 239));
 		panSouth.setBackground(Color.WHITE);
 
-		// panEast : 방 만들기
+		// panEast : 방 정보
 		panEast = new JPanel();
 		JLabel jLabel1 = new JLabel();
 		JLabel jLabel2 = new JLabel();
@@ -276,23 +266,13 @@ class HomePage extends JFrame implements ActionListener
 		panEast.setLayout(new GridLayout(5, 1, 0, 0));
 
 		panEast.add(jLabel1);
-		panEast.add(new JLabel(
-				"<html>"
-				+ "<p style = 'font-family:맑은 고딕', 'font-size:10px'>"
-				+ "<span style = 'font-size:11px; font-weight:bold;'>"
-				+ "<span style = 'color:red; '>[★연박불가★]</span>"
-				+ " economy(Room 1)</span>"
-				+ "<br> 누우면 잠이 솔솔 오는 아늑한 방.</p> "
-				+ "</html>"));
+		panEast.add(new JLabel("<html>" + "<p style = 'font-family:맑은 고딕', 'font-size:10px'>"
+				+ "<span style = 'font-size:11px; font-weight:bold;'>" + "<span style = 'color:red; '>[★연박불가★]</span>"
+				+ " economy(Room 1)</span>" + "<br> 누우면 잠이 솔솔 오는 아늑한 방.</p> " + "</html>"));
 		panEast.add(jLabel2);
-		panEast.add(new JLabel(
-				"<html>"
-				+ "<p style = 'font-family:맑은 고딕', 'font-size:10px'>"
-				+ "<span style = 'font-size:11px; font-weight:bold;'>"
-				+ "<span style = 'color:red;'>[★연박불가★]</span>"
-				+ " VVIP(Room 2)</span>"
-				+ "<br> 럭셔리하고 세련된 풀옵션 오션 뷰 룸.</p>"
-				+ "</html>"));
+		panEast.add(new JLabel("<html>" + "<p style = 'font-family:맑은 고딕', 'font-size:10px'>"
+				+ "<span style = 'font-size:11px; font-weight:bold;'>" + "<span style = 'color:red;'>[★연박불가★]</span>"
+				+ " VVIP(Room 2)</span>" + "<br> 럭셔리하고 세련된 풀옵션 오션 뷰 룸.</p>" + "</html>"));
 		panEast.add(btnRoom1 = new RoundButton("예약 하기"));
 
 		btnRoom1.setForeground(Color.white);
@@ -309,17 +289,6 @@ class HomePage extends JFrame implements ActionListener
 			}
 		});
 
-		/*
-		 * panEast.add(btnRoom1 = new RoundButton("economy 예약"));
-		 * btnRoom1.setForeground(new Color(224, 255, 255)); btnRoom1.setBackground(new
-		 * Color(100, 149, 237));
-		 * 
-		 * panEast.add(btnRoom2 = new RoundButton("VVIP 예약"));
-		 * btnRoom2.setForeground(new Color(224, 255, 255)); btnRoom2.setBackground(new
-		 * Color(100, 149, 237));
-		 * 
-		 * btnRoom1.setFont(f2); btnRoom2.setFont(f2);
-		 */
 
 		getContentPane().add(panEast, BorderLayout.EAST);
 		panEast.setBackground(Color.WHITE);
@@ -327,24 +296,20 @@ class HomePage extends JFrame implements ActionListener
 		btnBefore.addActionListener(this);
 		btnAfter.addActionListener(this);
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// *************
-		setTitle("예약 현황");// *********************
-		// setBounds(500,300,600,500);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("예약 현황");
+
 		setSize(1000, 600);
 		setVisible(true);
 		setLocationRelativeTo(null);
-	}// end constuctor
+	}
 
 	public void calSet() {
 		cal.set(Calendar.YEAR, year);
 		cal.set(Calendar.MONTH, (month - 1));
 		cal.set(Calendar.DATE, 1);
-		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK); // 요일 숫자로 반환 (일요일 : 0)
 
-		/*
-		 * get 및 set 를 위한 필드치로, 요일을 나타냅니다. 이 필드의 값은,SUNDAY,MONDAY,TUESDAY,WEDNESDAY
-		 * ,THURSDAY,FRIDAY, 및 SATURDAY 가 됩니다. get()메소드의 의해 요일이 숫자로 반환
-		 */
 
 		int j = 0;
 		int hopping = 0;
@@ -358,13 +323,11 @@ class HomePage extends JFrame implements ActionListener
 		for (int i = cal.getFirstDayOfWeek(); i < dayOfWeek; i++) {
 			j++;
 		}
-		/*
-		 * 일요일부터 그달의 첫시작 요일까지 빈칸으로 셋팅하기 위해
-		 */
+
+		// 해당 달의 첫 시작 요일 맞춤(빈칸 채움)
 		hopping = j;
 		for (int kk = 0; kk < hopping; kk++) {
 			calBtn[kk + 7].setText("");
-			// calBtn[kk+7].setBackground(new Color(255, 255, 255));
 		}
 
 		for (int i = cal.getMinimum(Calendar.DAY_OF_MONTH); i <= cal.getMaximum(Calendar.DAY_OF_MONTH); i++) {
@@ -393,16 +356,12 @@ class HomePage extends JFrame implements ActionListener
 					calBtn[i + 6 + hopping].setForeground(new Color(0, 0, 255));
 				}
 			}
-			/*
-			 * 요일을 찍은 다음부터 계산해야 하니 요일을 찍은 버튼의 갯수를 더하고 인덱스가 0부터 시작이니 -1을 해준 값으로 연산을 해주고 버튼의
-			 * 색깔을 변경해준다.
-			 */
-
+			// 남은 빈칸 채우기
 			calBtn[i + 6 + hopping].setText((i) + "");
 
-		} // for
+		}
 
-	}// end Calset()
+	}
 
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource() == btnBefore) {
@@ -429,50 +388,30 @@ class HomePage extends JFrame implements ActionListener
 			this.txtMonth.setText(month + "월");
 		}
 
-//      else if (ae.getSource() == btnAdd) {
-//         add();
-//         calSet();
-//         txtWrite.setText("");
-//
-//      }
-
-//      else if (ae.getSource() == btnDel) {
-//         del();
-//         calSet();
-//         txtWrite.setText("");
-//      }
 
 		else if (Integer.parseInt(ae.getActionCommand()) >= 1 && Integer.parseInt(ae.getActionCommand()) <= 31) {
 			day = Integer.parseInt(ae.getActionCommand());
 
-			// 버튼의 밸류 즉 1,2,3.... 문자를 정수형으로 변환하여 클릭한 날짜를 바꿔준다.
 
-//                    System.out.println(day);
 			searchmemo();
 			calSet();
 		}
 
-	}// end actionperformed()
+	}
 
 	public void hideInit() {
 		for (int i = 0; i < calBtn.length; i++) {
 			if ((calBtn[i].getText()).equals(""))
-				calBtn[i].setEnabled(false);
-//calBtn[i].setBackground(new Color(255, 255, 255));
+				calBtn[i].setEnabled(false);//일이 찍히지 않은 나머지 버튼을 비활성화 시킨다.
 
-//일이 찍히지 않은 나머지 버튼을 비활성화 시킨다.
-		} // end for
-	}// end hideInit()
-
-//     public void separate(){
+		}
+	}
 
 	public void gridInit() {
-		// jPanel3에 버튼 붙이기
 		// 표 요일 출력 (버튼으로 출력됨)
 		for (int i = 0; i < days.length; i++) {
 			JButton th = new JButton(days[i]);
 			th.setBackground(new Color(180, 201, 239)); // 버튼 배경색
-			// th.setEnabled(false);
 			panCenter.add(calBtn[i] = th);
 		}
 
@@ -481,12 +420,12 @@ class HomePage extends JFrame implements ActionListener
 			calBtn[i].addActionListener(this);
 		}
 
-	}// end gridInit()
+	}
 
 	public void panelInit() {
 		GridLayout gridLayout1 = new GridLayout(7, 7);
 		panCenter.setLayout(gridLayout1);
-	}// end panelInit()
+	}
 
 	public void calInput(int gap) {
 		month += (gap);
@@ -499,7 +438,7 @@ class HomePage extends JFrame implements ActionListener
 			year = year + 1;
 		}
 
-	}// end calInput()
+	}
 
 	public void add() {
 		try {
@@ -523,7 +462,7 @@ class HomePage extends JFrame implements ActionListener
 			e.printStackTrace();
 		}
 
-	}// end add()
+	}
 
 	public void del() {
 		try {
@@ -541,17 +480,13 @@ class HomePage extends JFrame implements ActionListener
 			e.printStackTrace();
 		}
 
-	}// end del();
+	}
 
 	public void searchmemo() { // 사용자가 선택한 날짜 정보
 		try {
 			dbConnect();
 
-			/*
-			 * sql = "select memo from reservation where check_in="; sql += checkIn +
-			 * " and checkOut="; sql += checkOut + " and days_between="; sql += "" + day +
-			 * ";";
-			 */
+
 			String clickDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
 			sql = "select * from reservation where check_in='";
 			sql += clickDate + "'";
@@ -560,7 +495,7 @@ class HomePage extends JFrame implements ActionListener
 			String gettemp = "\n";
 
 			while (rs.next()) {
-				gettemp +=" - "+ rs.getString("memo")+"\n";
+				gettemp += " - " + rs.getString("memo") + "\n";
 			}
 			txtWrite.setText(gettemp);
 
@@ -570,7 +505,7 @@ class HomePage extends JFrame implements ActionListener
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}// end searchmemo()
+	}
 
 	public void checkday() { // 이번달 전체 정보
 		dbConnect();
@@ -578,34 +513,11 @@ class HomePage extends JFrame implements ActionListener
 		String clickDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(todays);
 		sql = "select * from reservation where check_in='";
 		sql += clickDate + "'";
-		// sql = "select * from reservation";
 
 		try {
 			rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 
-				// System.out.println(rs.getDate("check_out")); //해당날짜의 체크아웃 날짜 가져오기
-
-				/*
-				 * Date date = new Date(); Calendar cal_out = Calendar.getInstance();
-				 * cal_out.setTime(rs.getDate("check_out"));
-				 * 
-				 * int out_year = cal_out.get(Calendar.YEAR); int out_month
-				 * =cal_out.get(Calendar.MONTH) + 1; int out_day
-				 * =cal_out.get(Calendar.DAY_OF_MONTH);
-				 * 
-				 * Calendar cal_in = Calendar.getInstance();
-				 * cal_in.setTime(rs.getDate("check_in"));
-				 * 
-				 * int in_year = cal_in.get(Calendar.YEAR); int in_month
-				 * =cal_in.get(Calendar.MONTH) + 1; int in_day
-				 * =cal_in.get(Calendar.DAY_OF_MONTH);
-				 * 
-				 * for(int i=in_year; i<=out_year;i++) { for(int j=in_month; j<=out_month;j++) {
-				 * for(int k=in_day; k<=out_day;k++) { memoday = 1; System.out.println(k);
-				 * 
-				 * } } }
-				 */
 				memoday = 1;
 
 			} else
@@ -619,7 +531,7 @@ class HomePage extends JFrame implements ActionListener
 			e.printStackTrace();
 		}
 
-	}// end checkday()
+	}
 
 	public void dbConnect() {
 		try {
@@ -631,4 +543,4 @@ class HomePage extends JFrame implements ActionListener
 		}
 	}
 
-}// end class
+}

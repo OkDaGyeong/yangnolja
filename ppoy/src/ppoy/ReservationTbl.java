@@ -51,8 +51,6 @@ public class ReservationTbl {
 		this.teamNum = teamNum;
 	}
 	
-	
-	
 	// toString
 	@Override
 	public String toString() {

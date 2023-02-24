@@ -35,13 +35,10 @@ public class Users {
 		this.userTel = userTel;
 	}
 	
-	
-	
 	//toString
 	@Override
 	public String toString() {
-		return "Users [userId=" + userId + ", userName=" + userName + ", userPw=" + userPw + ", userTel=" + userTel
-				+ "]";
+		return "Users [userId=" + userId + ", userName=" + userName + ", userPw=" + userPw + ", userTel=" + userTel + "]";
 	}
 	
 

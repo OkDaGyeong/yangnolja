@@ -41,7 +41,7 @@ public class RoundButton extends JButton{
         setOpaque(false);
     }
     
-    //
+
     @Override
     protected void paintComponent(Graphics g) {
         int width = getWidth();

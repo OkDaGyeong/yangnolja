@@ -58,7 +58,7 @@ public class ConnectionDB {
 				reserAll.setCheckIn(rs3.getDate("check_in"));
 				reserTblListAll.add(reserAll);
 				
-				System.out.println("all:"+reserAll);
+				//System.out.println("all:"+reserAll);
 			}
 			
 			rs3.close();
@@ -79,7 +79,7 @@ public class ConnectionDB {
 				"ppoy"
 			);	
 			
-			System.out.println("연결 성공");
+			///System.out.println("연결 성공");
 			
 			//SQL 작성
 			String sqlUsers = "select * from users";
@@ -99,8 +99,8 @@ public class ConnectionDB {
 			}
 			
 			
-			String sqlReser = "select * from reservation where user_id = '"+loginId+"';";	
-			System.out.println("login : " +loginId);
+			String sqlReser = "select * from reservation where user_id = '"+loginId+"' order by check_in;";	
+			//System.out.println("login : " +loginId);
 			PreparedStatement pstmtReser = conn.prepareStatement(sqlReser);			
 			ResultSet rs2 = pstmtReser.executeQuery();
 			//System.out.println("[reservation 테이블 데이터]");
@@ -114,10 +114,8 @@ public class ConnectionDB {
 				reser.setTeamNum(rs2.getInt("team_num"));
 				reserTblList.add(reser);
 				
-				System.out.println(reser);
+				//System.out.println(reser);
 			}
-		
-			
 			
 			rs.close();
 			rs2.close();
@@ -126,11 +124,6 @@ public class ConnectionDB {
 			pstmtUser.close();
 			pstmtReser.close();
 			
-			
-			//예약 삭제
-			/*String sqlDelReser = "delete from reservation where reser_no =?";
-			PreparedStatement pstmtDR = conn.prepareStatement(sqlDelReser);
-			pstmtDR.setString(1, reserNo);*/
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -141,7 +134,8 @@ public class ConnectionDB {
 				try { 
 					//연결 끊기
 					conn.close(); 
-					System.out.println("연결 끊기");
+					
+					//System.out.println("연결 끊기");
 				} catch (SQLException e) {}
 			}
 		}

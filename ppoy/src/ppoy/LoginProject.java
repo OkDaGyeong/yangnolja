@@ -108,9 +108,7 @@ class LoginPanel extends JPanel implements ActionListener {
       mainPanel.setBackground(new Color(255, 255, 255));
 
       JPanel centerPanel = new JPanel();
-//      JLabel loginLabel = new JLabel();
-//      loginLabel.setFont(font);
-//      centerPanel.add(loginLabel);
+
       centerPanel.setBackground(new Color(255, 255, 255));
 
       f1 = new Font("맑은 고딕", Font.BOLD, 17);
@@ -126,7 +124,6 @@ class LoginPanel extends JPanel implements ActionListener {
       
 
       JPanel gridBagidInfo = new JPanel(new GridBagLayout());
-//      gridBagidInfo.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
       GridBagConstraints c = new GridBagConstraints();
       gridBagidInfo.setBackground(new Color(255, 255, 255));
 
@@ -162,9 +159,7 @@ class LoginPanel extends JPanel implements ActionListener {
       passTextField.setFont(new Font("맑은 고딕", Font.BOLD, 22));
       
       JPanel loginPanel = new JPanel();
-     // JPanel signupPanel = new JPanel();
       JButton signupButton = new RoundButton("회원가입");
-     // signupPanel.setBackground(new Color(255, 255, 255));
       signupButton.setForeground(new Color(255, 255, 255));
       signupButton.setBackground(new Color(100, 149, 237));
       loginPanel.add(signupButton);
@@ -177,11 +172,10 @@ class LoginPanel extends JPanel implements ActionListener {
       loginPanel.setBackground(new Color(255, 255, 255));
       loginButton.setFont(f1);
       
-      //mainPanel.add(centerPanel);
+
       mainPanel.add(userPanel);//로고
       mainPanel.add(gridBagidInfo);
       mainPanel.add(loginPanel);
-     // mainPanel.add(signupPanel);
       loginButton.addActionListener(this);
 
       signupButton.addActionListener(new ActionListener() {
@@ -324,7 +318,7 @@ class signupPanel extends JPanel {
 
       c.gridx = 0;
       c.gridy = 9;
-      subPanel.add(phoneTf, c);
+      subPanel.add(phoneTf, c); // 휴대폰 번호
       
       JPanel btnPan = new JPanel();
       btnPan.setBackground(Color.white);
@@ -351,7 +345,6 @@ class signupPanel extends JPanel {
       mainPanel.add(subPanel);
       
       
-// 로그인 화면으로 돌아가기*******************************************************************수정필요
       
       backLogin.setFont(f1);
       backLogin.setForeground(new Color(255, 255, 255));
@@ -414,7 +407,7 @@ class signupPanel extends JPanel {
                      JOptionPane.showMessageDialog(null, "아이디 중복!", "아이디 중복 오류", 1);
                   } else
                      JOptionPane.showMessageDialog(null, "정보를 제대로 입력해주세요!", "오류", 1);
-               } // try ,catch
+               }
             }
          }
       });

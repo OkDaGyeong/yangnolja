@@ -60,9 +60,8 @@ public class MyPage extends JFrame {
 		loginId=id;
 		cn = new ConnectionDB(loginId);
 		
-		//getContentPane().setBackground(new Color(173, 216, 230));
 		getContentPane().setBackground(new Color(230, 230, 245));
-		this.setTitle("MyPage");
+		this.setTitle("INFO");
 		this.setSize(1000,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -70,7 +69,7 @@ public class MyPage extends JFrame {
 		this.setResizable(false); // 창크기 고정
 		getContentPane().setLayout(null);
 
-		//JLabel PageName = new JLabel("My Page["+id+"]");
+
 		JLabel PageName = new JLabel(" "+id+"님의 예약정보"); //이모티콘 추가
 		PageName.setIcon(new ImageIcon(MyPage.class.getResource("/img/user.png")));
 		PageName.setFont(new Font("맑은 고딕", Font.BOLD, 25));
@@ -109,13 +108,8 @@ public class MyPage extends JFrame {
 		btnDelete.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		btnDelete.setBounds(736, 479, 201, 56);
 		getContentPane().add(btnDelete);
-	
 		
-		//이미지 크기 조절
-//	    ImageIcon icon = new ImageIcon(getClass().getResource("/img/home.png"));			
-//	    Image img = icon.getImage();
-//	    Image changeImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-//	    ImageIcon changeIcon = new ImageIcon(changeImg);
+
 		ImageIcon changeIcon = new ImageIcon(getClass().getResource("/img/home.png"));
 	    
 		btnHome.setIcon(changeIcon);	    
@@ -155,8 +149,7 @@ public class MyPage extends JFrame {
 			celAlignCenter.setHorizontalAlignment(JLabel.CENTER);
 			DefaultTableCellRenderer celAlignRight = new DefaultTableCellRenderer();
 			celAlignRight.setHorizontalAlignment(JLabel.RIGHT);
-			
-			
+
 			
 			//표 생성
 			reserTbl = new JTable(reserTM);
@@ -182,8 +175,6 @@ public class MyPage extends JFrame {
 			reserTbl.getColumn("예약번호").setCellRenderer(celAlignCenter);
 			reserTbl.getColumn("방번호").setCellRenderer(celAlignCenter);				
 			reserTbl.getColumn("인원 수").setCellRenderer(celAlignCenter);
-//			reserTbl.getColumn("체크인 날짜").setCellRenderer(celAlignRight);	
-//			reserTbl.getColumn("체크아웃 날짜").setCellRenderer(celAlignRight);
 			reserTbl.getColumn("체크인 날짜").setCellRenderer(celAlignCenter);	
 			reserTbl.getColumn("체크아웃 날짜").setCellRenderer(celAlignCenter);
 			
@@ -212,7 +203,6 @@ public class MyPage extends JFrame {
 		try {
 			dbconnect();
 			sql = "delete from reservation where reser_no = "+num+";";
-			System.out.println("[delReser] : "+sql);
 			stmt.executeUpdate(sql);
 			
 			stmt.close();
@@ -235,16 +225,5 @@ public class MyPage extends JFrame {
 		}
 		
 	}
-	
-	/*public static void main(String[] args) {
-		
-		
-		SwingUtilities.invokeLater(new Runnable() {
-	        public void run() {
-	        	MyPage jFrame = new MyPage();
-	        	jFrame.setVisible(true);
-	        }
-	    });
 
-	}*/
 }

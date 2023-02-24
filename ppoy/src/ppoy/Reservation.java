@@ -39,8 +39,8 @@ import javax.swing.border.LineBorder;
 public class Reservation extends JFrame implements ActionListener {
    String loginUser;//로그인 정보
    JFrame setCheckInOutDate;
-//DB연결//////////////////////////////////////////////////////
 
+   //DB연결
    ConnectionDB connDB;
    Connection cn = null;
 
@@ -53,7 +53,7 @@ public class Reservation extends JFrame implements ActionListener {
    ResultSet rs = null;
    String sql, tempmemo;
 
-//////////////////////////////////////////////////////
+
    public void dbConnect() {
       try {
 
@@ -105,7 +105,7 @@ public class Reservation extends JFrame implements ActionListener {
          e.printStackTrace();
       }
    }
-/////////////////////////////////////////////////////////////
+
 
    Font fnt = new Font("맑은 고딕", Font.BOLD, 15);
 
@@ -182,7 +182,6 @@ public class Reservation extends JFrame implements ActionListener {
       checkInLbl.setBackground(new Color(100, 149, 237));
       checkInLbl.setForeground(new Color(255, 255, 255));
       checkInLbl.setBorder(BorderFactory.createEmptyBorder(0 , 10, 0 , 0));
-//      checkInField.setBorder(new EmptyBorder(0 , 20, 0 , 0));
       checkInField.setBorder(new LineBorder(new Color(100, 149, 237)));
 
       
@@ -194,7 +193,6 @@ public class Reservation extends JFrame implements ActionListener {
       checkOutLbl.setBackground(new Color(100, 149, 237));
       checkOutLbl.setForeground(new Color(255, 255, 255));
       checkOutLbl.setBorder(BorderFactory.createEmptyBorder(0 , 10, 0 , 0));
-//      checkOutField.setBorder(new EmptyBorder(0 , 20, 0 , 0));
       checkOutField.setBorder(new LineBorder(new Color(100, 149, 237)));
 
 
@@ -220,7 +218,7 @@ public class Reservation extends JFrame implements ActionListener {
       changePane.add(btnBack).setBounds(x, y+350, 200, 50);
       btnBack.setFont(fnt);
       btnBack.setBackground(new Color(100, 149, 237));
-      btnBack.setForeground(new Color(255, 255, 255));//------------
+      btnBack.setForeground(new Color(255, 255, 255));
 
       setBackground(Color.white);
       setSize(1000, 600);
@@ -275,8 +273,7 @@ public class Reservation extends JFrame implements ActionListener {
                saveInfo();
                this.setVisible(false);
                setCheckInOutDate.setVisible(false);
-// Reservation.reservationCheck.setVisible(true); 다음페이지 연결?
-// Reservation.centerPane.add(Reservation.reservationCheck);
+
             }
          } else if(btn.equals("취소")) {
         	 this.setVisible(false);
@@ -290,8 +287,8 @@ public class Reservation extends JFrame implements ActionListener {
       }
    }
 
-/// 출발 날짜가 도착 날짜보다 뒤로 설정해보는 엉뚱한 사람을 체크해라!
-   public int dayMinusCheck() {
+
+   public int dayMinusCheck() { // 체크인 날짜가 체크아웃날짜 이후의 날짜인지 확인
       int result = 0;
       int checkIn = Integer.valueOf(checkInField.getText().replace("/", ""));
       int checkOut = Integer.valueOf(checkOutField.getText().replace("/", ""));
@@ -313,8 +310,8 @@ public class Reservation extends JFrame implements ActionListener {
 	      return result;
 	   }
 
-// 출발날짜 선택을 당일보다 전일로 설정 할 경우 걸러낸다
-   public int errorCheck() {
+
+   public int errorCheck() { // 체크인 날짜가 오늘 이전의 날짜인지 확인
       int result = 0;
       int checkIn = Integer.valueOf(checkInField.getText().replace("/", ""));
       Date date = new Date();
@@ -327,8 +324,8 @@ public class Reservation extends JFrame implements ActionListener {
       return result;
    }
 
-// 중복 예약정보 확인
-   public int doubleCheck(String checkinDate, int roomNumber) {
+
+   public int doubleCheck(String checkinDate, int roomNumber) { // 중복 예약인지 확인
 	   int result =0;
 	   String ci = checkinDate.replace("/", "-");
 	   
@@ -351,7 +348,7 @@ public class Reservation extends JFrame implements ActionListener {
 
    class CustomCalendar extends JFrame implements ActionListener, WindowListener {
 	  
-// 상단 bar
+      // 상단 bar
       JPanel bar = new JPanel();
       JButton lastMonth = new RoundButton("◀");
 
@@ -364,15 +361,15 @@ public class Reservation extends JFrame implements ActionListener {
       JLabel mLbl = new JLabel("월");
       JButton nextMonth = new RoundButton("▶");
 
-// 중앙 날짜
+      // 중앙 날짜
       JPanel center = new JPanel(new BorderLayout());
       
-// 중앙상단
+      // 중앙상단
       JPanel cntNorth = new JPanel(new GridLayout(0, 7));
-// 정중앙
+      // 정중앙
       JPanel cntCenter = new JPanel(new GridLayout(0, 7));
 
-//요일 입력
+      //요일 입력
       String dw[] = { "일", "월", "화", "수", "목", "금", "토" };
 
       Calendar now = Calendar.getInstance();
@@ -400,7 +397,7 @@ public class Reservation extends JFrame implements ActionListener {
             monthModel.addElement(i);
          }
 
-///프레임
+         
          bar.setFont(new Font("맑은 고딕", Font.BOLD, 25));
          yearCombo.setFont(new Font("맑은 고딕", Font.BOLD, 15));
          monthCombo.setFont(new Font("맑은 고딕", Font.BOLD, 15));
@@ -408,13 +405,13 @@ public class Reservation extends JFrame implements ActionListener {
          yearCombo.setBackground(new Color(255, 255, 255));
          monthCombo.setOpaque(true);
          monthCombo.setBackground(new Color(255, 255, 255));
-// 상단
+
          add(bar, "North");
          bar.setLayout(new FlowLayout());
          bar.setSize(300, 400);
          bar.add(lastMonth);
          
-///////////달력
+         //달력
          bar.add(yearCombo);
          yearCombo.setModel(yearModel);
          yearCombo.setSelectedItem(year);
@@ -427,10 +424,10 @@ public class Reservation extends JFrame implements ActionListener {
          bar.add(mLbl);
          bar.add(nextMonth);
          bar.setBackground(new Color(100, 149, 237));
-// 중앙지역
+         // 중앙지역
          add(center, "Center");
         
-//중앙상단
+         //중앙상단
          center.add(cntNorth, "North");
          for (int i = 0; i < dw.length; i++) {
             JLabel dayOfWeek = new JLabel(dw[i], JLabel.CENTER);
@@ -443,28 +440,26 @@ public class Reservation extends JFrame implements ActionListener {
             dayOfWeek.setOpaque(true);
             dayOfWeek.setBackground(new Color(255, 255, 255));
          }
-// 정중앙
+         // 정중앙
          center.add(cntCenter, "Center");
          dayPrint(year, month);
 
-// 이벤트
+         // 이벤트
          yearCombo.addActionListener(this);
          monthCombo.addActionListener(this);
          lastMonth.addActionListener(this);
          nextMonth.addActionListener(this);
          addWindowListener(this);
 
-// frame 기본세팅
+         // frame 기본세팅
          setSize(400, 300);
          setVisible(true);
          setResizable(false);
          
-         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-// setLocation(750,230);
+
       }
 
-// 이벤트처리
-
+      // 이벤트처리
       @Override
       public void actionPerformed(ActionEvent e) {
          Object obj = e.getSource();
@@ -502,7 +497,7 @@ public class Reservation extends JFrame implements ActionListener {
          cntCenter.setVisible(true);
       }
 
-//날짜출력
+      //날짜출력
       public void dayPrint(int y, int m) {
          Calendar cal = Calendar.getInstance();
          cal.set(y, m - 1, 1);
@@ -532,13 +527,13 @@ public class Reservation extends JFrame implements ActionListener {
                   String y = "" + yearCombo.getSelectedItem();
                   String m = "" + monthCombo.getSelectedItem();
 
-// 받은 "요일"이 1자리면 앞에 0을 붙여 출력
+                  // 받은 "요일"이 1자리면 앞에 0을 붙여 출력
                   if (str.equals(""))
                      ;
                   else if (str.length() == 1)
                      str = "0" + str;
 
-// 받은 월 :"
+                  // 받은 월 :"
                   if (m.length() == 1)
                      m = "0" + m;
 
@@ -581,12 +576,6 @@ public class Reservation extends JFrame implements ActionListener {
 
    }
 
-   
-   /*public static void main(String[] args) { String id = "test";
-   	SwingUtilities.invokeLater(new Runnable() { public void run() { Reservation
-    jFrame = new Reservation(id); jFrame.setVisible(true); } });
-   
-   }*/
     
 
 } 
