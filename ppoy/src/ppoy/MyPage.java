@@ -36,6 +36,7 @@ public class MyPage extends JFrame {
 	private Font pt = new Font("맑은 고딕", Font.PLAIN, 23); 
 	
 	int delNum = 0 ; // 삭제할 예약번호
+	int reserNum=0;
 	String sql =""; // sql문 
 	
 	Connection conn = null;
@@ -76,7 +77,7 @@ public class MyPage extends JFrame {
 		PageName.setBounds(37, 25, 776, 56);
 		getContentPane().add(PageName);
 
-		btnDelete.setForeground(new Color(224, 255, 255));
+		btnDelete.setForeground(new Color(255, 255, 255));
 		btnDelete.setBackground(new Color(100, 149, 237));
 	
 		
@@ -111,7 +112,46 @@ public class MyPage extends JFrame {
 		
 
 		ImageIcon changeIcon = new ImageIcon(getClass().getResource("/img/home.png"));
+		
+		RoundButton btnUpdate = new RoundButton("예약 수정");
+		btnUpdate.setForeground(new Color(255, 255, 255));
+		btnUpdate.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+		btnUpdate.setBackground(new Color(100, 149, 237));
+		btnUpdate.setBounds(37, 479, 201, 56);
+		getContentPane().add(btnUpdate);
 	    
+		btnUpdate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				if(reserTbl.getSelectedRow() == -1) //선택안했을 때
+				{
+					JOptionPane.showMessageDialog(null, "변경할 예약을 선택하십시오", "경고", JOptionPane.WARNING_MESSAGE);
+					//return;
+				}
+				else
+				{
+					int result = JOptionPane.showConfirmDialog(null, "해당 예약을 수정하시겠습니까?","예약 변경",JOptionPane.YES_NO_OPTION);
+					if(result == JOptionPane.YES_OPTION) {
+						reserNum = (int) reserTbl.getValueAt(reserTbl.getSelectedRow(),0);
+						
+						System.out.println("reserNum:"+reserNum);
+						ReReservation reReserPage = new ReReservation(id,reserNum);
+						reReserPage.setVisible(true);
+						setVisible(false);
+					}else {
+						//예약변경 안함
+					}
+					
+					
+					
+				}
+
+			}
+		});
+
+		
 		btnHome.setIcon(changeIcon);	    
 		btnHome.setBackground(new Color(240, 240, 240));
 	    btnHome.setOpaque(false); //버튼 배경색 없애기
@@ -212,6 +252,8 @@ public class MyPage extends JFrame {
 			e.printStackTrace();
 		}
 	}
+	
+	
 	
 	public void dbconnect() {
 		try {
