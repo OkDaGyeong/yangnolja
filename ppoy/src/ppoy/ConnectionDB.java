@@ -18,10 +18,11 @@ public class ConnectionDB {
 	String user = "ppoy";
 	String pwd = "ppoy";
 	
-	ArrayList<Users> userTblList = new ArrayList<>();
+	ArrayList<Users> userTblList = new ArrayList<>(); //로그인 유저 정보
 	ArrayList<ReservationTbl> reserTblList = new ArrayList<>(); //로그인한 유저의 예약정보
 	ArrayList<ReservationTbl> reserTblListAll = new ArrayList<>(); // 모든 유저의 예약정보
 	
+	String loginUserName="";
 	public void dbconnect() {
 		try {
 			Class.forName(driver);
@@ -47,7 +48,7 @@ public class ConnectionDB {
 			);
 			
 			//reserTblListAll
-			String sqlReserAll = "select room_no, check_in from reservation;";	
+			String sqlReserAll = "select room_no, check_in, reser_no from reservation;";	
 		
 			PreparedStatement pstmtReserAll = conn.prepareStatement(sqlReserAll);			
 			ResultSet rs3 = pstmtReserAll.executeQuery();
@@ -56,6 +57,7 @@ public class ConnectionDB {
 				ReservationTbl reserAll = new ReservationTbl();
 				reserAll.setRoomNo(rs3.getInt("room_no"));
 				reserAll.setCheckIn(rs3.getDate("check_in"));
+				reserAll.setReserNo(rs3.getInt("reser_no"));
 				reserTblListAll.add(reserAll);
 				
 				//System.out.println("all:"+reserAll);
@@ -82,7 +84,7 @@ public class ConnectionDB {
 			///System.out.println("연결 성공");
 			
 			//SQL 작성
-			String sqlUsers = "select * from users";
+			String sqlUsers = "select * from users where user_id='"+loginId+"'";
 			//PreparedStatement 얻기 및 값 지정
 			PreparedStatement pstmtUser = conn.prepareStatement(sqlUsers);			
 			//SQL실행 후 ResultSet을 통해 데이터 읽기
@@ -95,6 +97,7 @@ public class ConnectionDB {
 				user.setUserPw(rs.getString("user_pw"));
 				user.setUserTel(rs.getString("user_tel"));
 				userTblList.add(user);
+				loginUserName=rs.getString("user_name");
 				//System.out.println(user);
 			}
 			
@@ -116,6 +119,8 @@ public class ConnectionDB {
 				
 				//System.out.println(reser);
 			}
+			
+			
 			
 			rs.close();
 			rs2.close();

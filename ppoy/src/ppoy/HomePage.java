@@ -80,8 +80,7 @@ class HomePage extends JFrame implements ActionListener
 	// Date date;
 
 	JButton btnBefore, btnAfter;
-	JButton btnAdd, btnDel;
-	JButton btnRoom1, btnRoom2, btnRoom3;
+	JButton btnRoomReser;
 	JButton myPage, btnLogout;
 	JButton[] calBtn = new JButton[49];
 
@@ -246,7 +245,7 @@ class HomePage extends JFrame implements ActionListener
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// 이미지 클릭 시 새창 띄우기
-				ImageWindow imageWindow = new ImageWindow(imageIcon);
+				new ImageWindow(imageIcon);
 			}
 		});
 
@@ -260,9 +259,10 @@ class HomePage extends JFrame implements ActionListener
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// 이미지 클릭 시 새창 띄우기
-				ImageWindow imageWindow = new ImageWindow(imageIcon2);
+				new ImageWindow(imageIcon2);
 			}
 		});
+		
 		panEast.setLayout(new GridLayout(5, 1, 0, 0));
 
 		panEast.add(jLabel1);
@@ -273,18 +273,19 @@ class HomePage extends JFrame implements ActionListener
 		panEast.add(new JLabel("<html>" + "<p style = 'font-family:맑은 고딕', 'font-size:10px'>"
 				+ "<span style = 'font-size:11px; font-weight:bold;'>" + "<span style = 'color:red;'>[★연박불가★]</span>"
 				+ " VVIP(Room 2)</span>" + "<br> 럭셔리하고 세련된 풀옵션 오션 뷰 룸.</p>" + "</html>"));
-		panEast.add(btnRoom1 = new RoundButton("예약 하기"));
+		panEast.add(btnRoomReser = new RoundButton("예약 하기"));
 
-		btnRoom1.setForeground(Color.white);
-		btnRoom1.setBackground(new Color(100, 149, 237));
-		btnRoom1.setFont(f3);
+		btnRoomReser.setForeground(Color.white);
+		btnRoomReser.setBackground(new Color(100, 149, 237));
+		btnRoomReser.setFont(f3);
 		panEast.setBorder(new EmptyBorder(10, 0, 10, 15));
 
-		btnRoom1.addActionListener(new ActionListener() {
+		btnRoomReser.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Reservation reserPage = new Reservation(id);
 				reserPage.setVisible(true);
+				setVisible(false);
 
 			}
 		});
@@ -440,47 +441,7 @@ class HomePage extends JFrame implements ActionListener
 
 	}
 
-	public void add() {
-		try {
-			String temp = txtWrite.getText();
-			dbConnect();
-
-			if (temp.equals("")) {
-				JOptionPane.showMessageDialog(null, "내용이 없습니다.");
-				return;
-			} else {
-				JOptionPane.showMessageDialog(null, "입력되었습니다.");
-			}
-
-			sql = "update reservation " + "set check_in =?, " + "check_out = ?," + "where id = reser_no";
-			stmt.executeUpdate(sql);
-
-			stmt.close();
-			cn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void del() {
-		try {
-			dbConnect();
-			String clickDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
-			sql = "delete from reservation where check_in='";
-			sql += clickDate + "'";
-
-			stmt.executeUpdate(sql);
-			stmt.close();
-			cn.close();
-		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
+	
 
 	public void searchmemo() { // 사용자가 선택한 날짜 정보
 		try {

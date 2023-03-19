@@ -2,7 +2,6 @@ package ppoy;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -33,9 +32,8 @@ public class MyPage extends JFrame {
 	
 	private Font tHead = new Font("맑은 고딕", Font.BOLD, 23);
 	private Font tpt = new Font("맑은 고딕", Font.PLAIN, 18);
-	private Font pt = new Font("맑은 고딕", Font.PLAIN, 23); 
 	
-	int delNum = 0 ; // 삭제할 예약번호
+	int delNum = 0 ; // 취소할 예약번호
 	int reserNum=0;
 	String sql =""; // sql문 
 	
@@ -70,8 +68,8 @@ public class MyPage extends JFrame {
 		this.setResizable(false); // 창크기 고정
 		getContentPane().setLayout(null);
 
-
-		JLabel PageName = new JLabel(" "+id+"님의 예약정보"); //이모티콘 추가
+		String loginUserName=cn.loginUserName;
+		JLabel PageName = new JLabel(" "+loginUserName+"("+id+") "+"님의 예약정보"); //이모티콘 추가
 		PageName.setIcon(new ImageIcon(MyPage.class.getResource("/img/user.png")));
 		PageName.setFont(new Font("맑은 고딕", Font.BOLD, 25));
 		PageName.setBounds(37, 25, 776, 56);
@@ -90,7 +88,7 @@ public class MyPage extends JFrame {
 				}
 				else
 				{
-					int result = JOptionPane.showConfirmDialog(null, "선택한 예약을 삭제하시겠습니까?","삭제",JOptionPane.YES_NO_OPTION);
+					int result = JOptionPane.showConfirmDialog(null, "선택한 예약을 취소하시겠습니까?","예약 취소",JOptionPane.YES_NO_OPTION);
 					if(result == JOptionPane.YES_OPTION) {
 						delNum = (int) reserTbl.getValueAt(reserTbl.getSelectedRow(),0);
 						delReser(delNum);
@@ -98,9 +96,6 @@ public class MyPage extends JFrame {
 					}else {
 						//예약취소 안함
 					}
-					
-					
-					
 				}
 
 			}
@@ -136,15 +131,12 @@ public class MyPage extends JFrame {
 					if(result == JOptionPane.YES_OPTION) {
 						reserNum = (int) reserTbl.getValueAt(reserTbl.getSelectedRow(),0);
 						
-						System.out.println("reserNum:"+reserNum);
 						ReReservation reReserPage = new ReReservation(id,reserNum);
 						reReserPage.setVisible(true);
 						setVisible(false);
 					}else {
 						//예약변경 안함
 					}
-					
-					
 					
 				}
 
@@ -193,7 +185,7 @@ public class MyPage extends JFrame {
 			
 			//표 생성
 			reserTbl = new JTable(reserTM);
-			reserTbl.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+			reserTbl.setFont(tpt);
 			reserTbl.getTableHeader().setBackground(new Color(180,201,239)); // th 색상
 			
 			reserTbl.setBackground(new Color(255, 255, 255));
@@ -252,7 +244,6 @@ public class MyPage extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
 	
 	
 	public void dbconnect() {

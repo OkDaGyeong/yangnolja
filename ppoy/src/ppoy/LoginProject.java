@@ -135,6 +135,7 @@ class LoginPanel extends JPanel implements ActionListener {
       idLabel.setFont(new Font("맑은 고딕", Font.BOLD, 22));
 
       idTextField = new JTextField(10);
+      idTextField.setText("");
       idTextField.setBorder(new LineBorder(new Color(228, 228, 228),2, true));
       c.insets = new Insets(0, 10, 0, 0);
       c.gridx = 1;
@@ -151,6 +152,7 @@ class LoginPanel extends JPanel implements ActionListener {
       passLabel.setFont(new Font("맑은 고딕", Font.BOLD, 22));
 
       passTextField = new JPasswordField(10);
+      passTextField.setText("");
       passTextField.setBorder(new LineBorder(new Color(228, 228, 228),2, true));
       c.insets = new Insets(20, 10, 0, 0);
       c.gridx = 1;
@@ -207,7 +209,7 @@ class LoginPanel extends JPanel implements ActionListener {
             rset.next();
 
             if (pass.equals(rset.getString(1))) {
-               JOptionPane.showMessageDialog(this, "메인 페이지로 이동합니다.", "로그인 성공", 1);
+               //JOptionPane.showMessageDialog(this, "메인 페이지로 이동합니다.", "로그인 성공", 1);
                HomePage hp = new HomePage(id);
                jf.dispose();
 
@@ -263,18 +265,23 @@ class signupPanel extends JPanel {
       idTf = new JTextField(15);
       idTf.setFont(f2);
       idTf.setBorder(new LineBorder(new Color(228, 228, 228),2, true));
+      idTf.setText("");
       passTf = new JPasswordField(15);
       passTf.setFont(f2);
       passTf.setBorder(new LineBorder(new Color(228, 228, 228),2, true));
+      passTf.setText("");
       passReTf = new JPasswordField(15);
       passReTf.setFont(f2);
       passReTf.setBorder(new LineBorder(new Color(228, 228, 228),2, true));
+      passReTf.setText("");
       nameTf = new JTextField(15);
       nameTf.setFont(f2);
       nameTf.setBorder(new LineBorder(new Color(228, 228, 228),2, true));
+      nameTf.setText("");
       phoneTf = new JTextField(11);
       phoneTf.setFont(f2);
       phoneTf.setBorder(new LineBorder(new Color(228, 228, 228),2, true));
+      phoneTf.setText("");
 
       GridBagConstraints c = new GridBagConstraints();
       c.fill = GridBagConstraints.HORIZONTAL;
