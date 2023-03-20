@@ -35,9 +35,20 @@ Java Swing, MySQL을 사용한 예약관리 프로그램
 ![image](https://user-images.githubusercontent.com/81674153/220979616-8b363427-b19f-4e82-8992-e2d0fac74cb4.png)
 
 ### [예약 확인 페이지]
-로그인된 회원이 예약한 내역만 확인 가능. 예약 내역을 클릭하지 않으면 삭제 안됨. <br>
-예약 내역을 클릭 후 삭제 버튼을 누르면 삭제 여부를 한 번 더 체크하는 메시지 출력. <br>
+로그인된 회원이 예약한 내역만 확인 가능. 예약 내역을 클릭하지 않으면 수정/취소 안됨. <br>
+예약 내역 클릭 후 수정 버튼을 누르면 예약 수정 페이지로 이동 <br>
+예약 내역 클릭 후 삭제 버튼을 누르면 취소 여부를 한 번 더 체크하는 메시지 출력. 메시지 확인 시 해당 내역 삭제 <br>
 홈 버튼을 누르면 메인 페이지로 돌아감.<br>
 <br>
-![image](https://user-images.githubusercontent.com/81674153/220980319-e18cd784-b06c-4c71-aed9-7ccc1e16d994.png)
+![image](https://user-images.githubusercontent.com/81674153/226218774-e237d9eb-906b-4744-8c0d-10df391f3e64.png)
+
+### [예약 수정 페이지]
+예약 확인 페이지에서 선택한 예약의 기존 정보를 불러옴. <br>
+기존 예약 정보 중 일부 또는 전체 변경 가능. <br>
+변경하려는 날짜에 이미 동일한 방이 예약되어있다면 해당 날짜로 변경 불가.<br>
+<br>
+![image](https://user-images.githubusercontent.com/81674153/226252945-3702edee-15e0-4c4d-8c9c-1a43a2b8b1cc.png)
+
+
+
 
